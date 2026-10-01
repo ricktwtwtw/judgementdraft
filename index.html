@@ -305,7 +305,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opa
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 :root[data-theme="dark"] body::before{mix-blend-mode:screen;opacity:.04}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::before{mix-blend-mode:screen;opacity:.04}}
-header,main,#drMain,#toast{position:relative;z-index:1}
+header,main,#drMain,#stMain,#toast{position:relative;z-index:1}
 header{position:sticky;z-index:20}
 #toast{position:fixed;z-index:50}
 .cks{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:8px}
@@ -329,12 +329,68 @@ td.st .bdg::before{display:none}
 .fg.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .fg.two label:not(.ck) select,.fg.two label:not(.ck) input{width:100%}
 @media (max-width:860px){.fg.two{grid-template-columns:minmax(0,1fr)}}
+
+/* ===== 多數被告 ===== */
+.deftabs{display:flex;flex-wrap:wrap;gap:8px}
+.deftab{display:inline-flex;align-items:stretch;border:1px solid var(--line-2);border-radius:12px;background:var(--raised);box-shadow:var(--shadow-1);transition:border-color .15s,box-shadow .2s,transform .15s;overflow:hidden}
+.deftab:hover{border-color:color-mix(in srgb,var(--ink) 28%,transparent)}
+.deftab.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),var(--shadow-1)}
+.dt-go{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:7px 12px 7px 8px;cursor:pointer;text-align:left}
+.dt-av{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font:700 14px/1 var(--serif);background:color-mix(in srgb,var(--ink) 7%,transparent);color:var(--ink-2);transition:background .15s,color .15s}
+.deftab.on .dt-av{background:var(--accent);color:var(--accent-ink);transform:rotate(-4deg)}
+.dt-tx{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.dt-tx b{font-size:13.5px;font-weight:650;max-width:11em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dt-tx small{font-size:11px;color:var(--muted)}
+.dt-x{border:0;border-left:1px solid var(--line);background:transparent;width:30px;cursor:pointer;color:var(--faint);font-size:16px;transition:color .15s,background .15s}
+.dt-x:hover{color:var(--err);background:var(--err-bg)}
+.deftab-add{height:44px;border:1.5px dashed var(--line-2);border-radius:12px;background:transparent;padding:0 14px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:600;transition:border-color .15s,color .15s,background .15s}
+.deftab-add:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.deftab-add.ghost{border-style:solid;border-color:transparent}
+#dDefHint{margin-top:10px}
+body[data-multi] .perdef{position:relative}
+body[data-multi] label.perdef::after,body[data-multi] .fl.perdef::after{content:"個別";font:600 9.5px/1 var(--sans);letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:3px 5px;margin-left:6px;vertical-align:1px}
+body[data-multi] .fg.two label.perdef:not(.ck)::after{position:absolute;right:0;top:0}
+
+/* ===== 量刑理由 ===== */
+#stMain{display:grid;grid-template-columns:minmax(380px,.86fr) minmax(0,1.14fr);gap:14px;padding:14px;height:calc(100vh - var(--hdr))}
+#sOut{flex:1;width:100%;border:0;resize:none;padding:28px 36px 40px 64px;background:transparent;color:var(--ink);font:16px/2 var(--serif);outline:none;letter-spacing:.02em;
+  background-image:linear-gradient(90deg,transparent 47px,color-mix(in srgb,var(--accent) 35%,transparent) 47px,color-mix(in srgb,var(--accent) 35%,transparent) 48px,transparent 48px)}
+#sOut::placeholder{color:var(--faint);font-family:var(--sans);font-size:14px;line-height:1.9;letter-spacing:.02em}
+#sSide{flex:1;overflow:auto;padding:14px 14px 20px}
+#sSide>*{animation:rise .45s var(--ease) both}
+#sTabs button{height:36px}
+#sCnt{font:500 11.5px/1 var(--mono);color:var(--faint)}
+.fg-in.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 14px}
+.fg-in.two label:not(.ck),label.blk{display:flex;flex-direction:column;font-size:11.5px;color:var(--muted);gap:5px;letter-spacing:.08em;font-weight:600}
+label.blk{margin-top:12px}
+.fg-in.two label:not(.ck) select,.fg-in.two label:not(.ck) input,label.blk input,label.blk textarea{font-weight:400;letter-spacing:0;font-size:13.5px;width:100%}
+label.blk textarea{font-size:14.5px;line-height:1.75}
+.fg-in.two label.ck{align-self:end}
+.st-import{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.st-import .btn svg{width:15px;height:15px}
+#sImpInfo{flex:1;min-width:0}
+.st-range{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);font-size:13px;line-height:1.75}
+.st-range b{font-family:var(--serif);letter-spacing:.04em}
+.st-range .basis{display:block;margin-top:2px}
+textarea.dflt{color:var(--muted)}
+.cov{width:100%;border-collapse:collapse;font-size:13.5px}
+.cov th,.cov td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.cov th{font:600 11px/1.4 var(--sans);letter-spacing:.1em;color:var(--muted);text-transform:none}
+.cov td:first-child{font:600 12px/1.6 var(--mono);color:var(--accent);white-space:nowrap}
+.cov .st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;white-space:nowrap}
+.cov .st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.cov .st.y{color:var(--ok)}.cov .st.p{color:var(--warn)}.cov .st.n{color:var(--faint)}
+@media (max-width:860px){
+  #stMain{grid-template-columns:1fr;height:auto;padding:10px;gap:10px}
+  #sOut{padding:20px 18px 30px 40px;background-image:linear-gradient(90deg,transparent 27px,color-mix(in srgb,var(--accent) 35%,transparent) 27px,color-mix(in srgb,var(--accent) 35%,transparent) 28px,transparent 28px)}
+  .fg-in.two{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <header>
   <div class="brand"><span class="seal" aria-hidden="true">判</span><div class="txt"><span class="eyebrow">Criminal Judgment Workbench</span><h1>判決稿工具</h1></div></div>
-  <div class="seg app" role="tablist" aria-label="模式"><button id="appChk" class="on">判決檢核</button><button id="appDr">撰稿綱要</button></div>
+  <div class="seg app" role="tablist" aria-label="模式"><button id="appChk" class="on">判決檢核</button><button id="appDr">撰稿綱要</button><button id="appSt">量刑理由</button></div>
   <span class="sub">第一審刑事判決・離線執行，文字不離開本機</span>
   <span class="sp"></span>
   <div class="hdr-actions">
@@ -379,6 +435,9 @@ td.st .bdg::before{display:none}
 <main id="drMain" hidden>
   <section class="pane">
     <form id="drForm" onsubmit="return false" class="dform">
+      <div class="fg defs"><div class="fl">被告<span class="basis">（多數被告時逐一新增，各被告可分別設定罪名、參與形態、加減事由、緩刑與沒收）</span></div>
+        <div id="dDefs" class="deftabs" role="tablist" aria-label="被告"></div>
+        <div class="basis" id="dDefHint" hidden>以下標示「個別」之欄位依目前選取之被告分別設定；其餘欄位（法院、程序、證據能力等）全案共用。</div></div>
       <div class="fg"><div class="fl">論罪法條<span class="basis">（可含加減事由條文，以頓號分隔）</span></div>
         <textarea id="dStat" rows="3" placeholder="例：刑法第339條之4第1項第2款、洗錢防制法第19條第1項後段&#10;亦可簡寫：刑320Ⅰ、刑321Ⅰ③、毒品條例4Ⅱ、刑47、刑59"></textarea>
         <select id="dPick"></select>
@@ -471,6 +530,103 @@ td.st .bdg::before{display:none}
       <button class="btn" id="dCopy" disabled>複製</button><button class="btn" id="dDown" disabled>下載</button><button class="btn primary" id="dToChk" disabled>送入檢核</button></div>
     <textarea id="dOut" spellcheck="false" placeholder="左側輸入法條並選擇案件要素後，按「產生綱要」。&#10;&#10;〔　〕為待填欄位，「※」為寫作提示行。填寫完成後按「送入檢核」，未填的〔〕會被檢核標出。"></textarea>
     <div id="dSide" hidden></div>
+  </section>
+</main>
+<main id="stMain" hidden>
+  <section class="pane">
+    <form id="stForm" onsubmit="return false" class="dform">
+      <div class="fg"><div class="fl">案件<span class="basis">（可自「撰稿綱要」目前選取之被告帶入罪名、處斷刑、自白、前科與加減事由）</span></div>
+        <div class="st-import"><button type="button" class="btn" id="sImport"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H3v10h10V6M8 9l6-6M10 3h4v4"/></svg>自撰稿綱要帶入</button><span class="basis" id="sImpInfo">尚未帶入</span></div>
+        <div class="fg-in two">
+          <label>案件類型<select id="sCat"></select></label>
+          <label>同罪次數<input id="sCounts" type="number" min="1" max="99" value="1"></label>
+          <label>段落格式<select id="sStyle"><option value="para">一段式（傳統）</option><option value="struct">分項式（犯罪情狀／行為人屬性）</option></select></label>
+          <label>宣告刑（備註用）<input id="sSent" placeholder="例：有期徒刑1年2月"></label>
+        </div>
+        <div class="cks" style="margin-top:12px">
+          <label class="ck"><input type="checkbox" id="sLaw">冠以量刑法理</label>
+          <label class="ck"><input type="checkbox" id="sPage" checked>附卷頁〔本院卷第〇頁〕</label>
+          <label class="ck"><input type="checkbox" id="sYk">易科罰金折算標準</label>
+          <label class="ck"><input type="checkbox" id="sFineYk">罰金易服勞役折算標準</label>
+        </div>
+        <div id="sRange" class="st-range" hidden></div>
+      </div>
+      <div class="fg"><div class="fl">犯罪情狀<span class="basis">（§57第1、2、3、7、8、9款——責任刑之基礎，優先審酌）</span></div>
+        <div class="fg-in two">
+          <label>動機、目的（第1款）<select id="sMot"><option value="auto">依案件類型</option><option value="econ">經濟需求</option><option value="greed">貪圖不法利益</option><option value="emotion">一時情緒失控</option><option value="other">〔待填〕</option><option value="none">不載</option></select></label>
+          <label>所受刺激（第2款）<select id="sStim"><option value="none">不載</option><option value="provoke">告訴人先行挑釁</option><option value="other">〔待填〕</option></select></label>
+          <label>與被害人關係（第7款）<select id="sRel"><option value="">不載</option><option value="stranger">素不相識</option><option value="acquaint">朋友</option><option value="family">親屬</option><option value="partner">伴侶</option><option value="colleague">同事</option><option value="neighbor">鄰居</option></select></label>
+          <label>犯罪所得（元）<input id="sGain" placeholder="例：5,000"></label>
+        </div>
+        <label class="blk">動機自訂<input id="sMotT" placeholder="空白時依上方選項；例：因積欠賭債，為求快速獲取報酬"></label>
+        <label class="blk">犯罪手段（第3款）<textarea id="sMeans" rows="2" data-def="means"></textarea></label>
+        <label class="blk" id="sRoleRow">分工角色、參與程度<textarea id="sRole" rows="2" data-def="roleNote"></textarea></label>
+        <div class="fg-in two" id="sNegRow" hidden>
+          <label>違反注意義務之程度（第8款）<select id="sDuty"><option value="main">肇事主因</option><option value="sole">唯一肇事原因</option><option value="sub">肇事次因</option></select></label>
+          <label class="ck"><input type="checkbox" id="sVfault">被害人與有過失</label>
+        </div>
+        <label class="blk">所生危險或損害（第9款）<textarea id="sHarm" rows="2" data-def="harm"></textarea></label>
+        <label class="ck" style="margin-top:10px"><input type="checkbox" id="sGen" checked>加入一般預防背景句（如詐欺犯罪猖獗）</label>
+      </div>
+      <div class="fg"><div class="fl">行為人屬性<span class="basis">（§57第4、5、6款）</span></div>
+        <div class="fg-in two">
+          <label>品行（第5款）<select id="sRec"><option value="">不載</option><option value="none">無前科</option><option value="prior">有前科（檢察官未主張累犯）</option><option value="recUsed">累犯已加重（不重複評價）</option><option value="recNotUsed">構成累犯但不加重</option><option value="juv">僅有少年前案</option></select></label>
+          <label>智識程度（第6款）<input id="sEdu" list="sEduL" placeholder="例：高中畢業"><datalist id="sEduL"><option>國小畢業</option><option>國中畢業</option><option>國中肄業</option><option>高中畢業</option><option>高職畢業</option><option>高中肄業</option><option>專科畢業</option><option>大學畢業</option><option>大學肄業</option><option>碩士畢業</option></datalist></label>
+          <label>職業<input id="sJob" placeholder="例：餐飲業、無業"></label>
+          <label>經濟狀況<select id="sEcon"><option value="">〔待填〕</option><option value="poor">貧寒</option><option value="tight">勉持</option><option value="ok">小康</option><option value="good">富裕</option></select></label>
+        </div>
+        <label class="blk">家庭狀況<input id="sFam" placeholder="例：未婚、無子女，與母親同住／已婚、育有2名未成年子女"></label>
+        <label class="blk">身心狀況（選填）<input id="sHealth" placeholder="例：領有輕度身心障礙證明"></label>
+      </div>
+      <div class="fg"><div class="fl">犯後態度<span class="basis">（§57第10款）</span></div>
+        <div class="fg-in two">
+          <label>自白情形<select id="sPlea"><option value="full">偵審均坦承</option><option value="trial">審理中坦承</option><option value="late">審理後期始坦承</option><option value="partial">坦承客觀、否認主觀</option><option value="denyN">否認（中性句型）</option><option value="deny">否認（未見悔意）</option><option value="silent">保持緘默</option><option value="">不載</option></select></label>
+          <label>賠償、和解<select id="sComp"><option value="">不載（無被害人等）</option><option value="paid">和解並履行完畢</option><option value="inst">調解分期履行中</option><option value="part">部分賠償</option><option value="failAmt">調解未成立（金額差距）</option><option value="failAbs">調解未成立（告訴人未到）</option><option value="noWill">迄未和解賠償</option><option value="returned">財物已發還</option></select></label>
+          <label>賠償金額（元）<input id="sAmt" placeholder="例：5萬"></label>
+        </div>
+        <label class="blk">其他犯後表現（選填）<input id="sAfter" placeholder="例：並主動繳回犯罪所得、協助查獲上手"></label>
+      </div>
+      <div class="fg"><div class="fl">科刑意見<span class="basis">（刑事訴訟法第289條第2項）</span></div>
+        <div class="fg-in two">
+          <label>告訴人意見<select id="sVictim"><option value="">不載</option><option value="lenient">請求從輕</option><option value="forgive">願意原諒</option><option value="severe">請求從重</option><option value="none">未到庭陳述</option></select></label>
+          <label class="ck"><input type="checkbox" id="sHasDef">有辯護人</label>
+        </div>
+        <label class="blk">告訴人意見自訂<input id="sVictimT" placeholder="例：表示被告如能依調解內容履行，同意從輕量刑"></label>
+        <label class="blk">檢察官<input id="sPros" placeholder="例：具體求處有期徒刑1年6月"></label>
+        <label class="blk">被告／辯護人<input id="sDfn" placeholder="例：請求從輕量刑並給予緩刑"></label>
+      </div>
+      <div class="fg"><div class="fl">想像競合輕罪與重複評價<span class="basis">（輕罪減輕事由移列量刑；已據以加減刑之事由不再從重從輕）</span></div><div class="cks">
+        <label class="ck"><input type="checkbox" data-light="ml23">洗錢§23Ⅲ前段自白</label>
+        <label class="ck"><input type="checkbox" data-light="ml16">修正前洗錢§16Ⅱ自白</label>
+        <label class="ck"><input type="checkbox" data-light="org8">組織條例§8Ⅰ後段自白</label>
+        <label class="ck"><input type="checkbox" data-light="f47">詐欺條例§47（輕罪）</label>
+        <label class="ck"><input type="checkbox" data-light="att">輕罪未遂§25Ⅱ</label>
+        <label class="ck"><input type="checkbox" id="sFineNo">輕罪應併科罰金，不併科（敘明理由）</label>
+        <label class="ck"><input type="checkbox" id="sSelf">自首已減刑</label>
+        <label class="ck"><input type="checkbox" id="sConf">自白已依特別法減刑</label>
+      </div></div>
+      <div class="fg"><div class="fl">定應執行刑與緩刑</div>
+        <div class="fg-in two">
+          <label>定應執行刑<select id="sAgg"><option value="">不適用</option><option value="set">於本判決定刑</option><option value="defer">暫不定刑（另案待確定）</option></select></label>
+          <label>罪質<select id="sAggSame"><option value="same">相同（責任非難重複程度高）</option><option value="diff">不同（獨立程度高）</option></select></label>
+          <label>被害人<select id="sAggVic"><option value="diff">不同被害人</option><option value="same">同一被害人</option></select></label>
+          <label>犯罪期間<input id="sAggSpan" placeholder="例：114年3月至5月間"></label>
+        </div>
+        <label class="blk">各罪共通情節<input id="sAggT" placeholder="例：均係加入同一詐欺集團擔任車手所為"></label>
+        <div class="fg-in two" style="margin-top:12px">
+          <label>緩刑<select id="sProb"><option value="">不載</option><option value="grant">宣告緩刑</option><option value="deny">不予緩刑</option></select></label>
+          <label>緩刑負擔<select id="sProbC"><option value="">無</option><option value="1">①道歉</option><option value="2">②悔過書</option><option value="3">③支付被害人</option><option value="4">④支付公庫</option><option value="5">⑤義務勞務</option><option value="6">⑥公益團體服務</option><option value="7">⑦預防再犯所為之必要命令</option><option value="8">⑧完成戒癮治療等處遇</option></select></label>
+        </div>
+      </div>
+      <div class="fbtn"><button type="button" class="btn" id="sEx">範例</button><button type="button" class="btn ghost" id="sReset">清空</button><button type="button" class="btn primary" id="sGenBtn" title="Ctrl／⌘ + Enter">產生量刑理由</button></div>
+    </form>
+  </section>
+  <section class="pane">
+    <div class="bar"><div class="tabs" id="sTabs" style="border:0;padding:0"><button data-st="text" class="on">量刑理由</button><button data-st="notes">審酌提示</button><button data-st="cov">§57對照</button></div>
+      <span style="flex:1"></span><span class="basis" id="sCnt"></span>
+      <button class="btn" id="sCopy" disabled>複製</button><button class="btn" id="sToDr" disabled title="以本段取代撰稿綱要中「爰以行為人之責任為基礎…」段落">插入撰稿綱要</button></div>
+    <textarea id="sOut" spellcheck="false" placeholder="左側選擇案件類型、填入量刑事實後，按「產生量刑理由」。&#10;&#10;〔　〕為待填欄位；「審酌提示」列出重複評價、緘默權、輕罪量刑因子、科刑辯論等最高法院要求；「§57對照」檢視十款是否均已具體審酌。"></textarea>
+    <div id="sSide" hidden></div>
   </section>
 </main>
 <div id="printArea"></div>
@@ -854,7 +1010,7 @@ var JudgmentCheck = (function () {
     appxG.forEach(function (g) { checkTerms(g, '附表', true); });
 
     var crimeMain = [];
-    var CRIME_RE = /犯(?!罪)([^，。；、：\n如]{1,40}?罪)/g;
+    var CRIME_RE = /犯(?!罪)((?:(?:修正前)?詐欺犯罪危害防制條例[^，。；：\n如]{1,70}?|[^，。；、：\n如]{1,40}?)罪)(?!危害防制)/g;
     var multiDef = groups.filter(function (g) { return g.label !== '主文'; }).length > 1;
 
     // 刑法第50條第1項但書：僅就易刑條件相同部分定應執行刑（「前開有期徒刑得易科罰金部分，應執行…」）
@@ -1033,7 +1189,42 @@ var JudgmentCheck = (function () {
       }
       if (newML.length && before && !cmp) add('warn', C3, '犯罪時間在洗錢防制法修正前，未見新舊法比較', ML + '事實有113年8月2日以前之日期，請確認已依刑法第2條第1項比較適用。', newML);
       var fraud = cites.filter(function (c) { return c.law === '刑法' && c.art === '339' && c.sub === '4'; });
-      if (fraud.length && !/詐欺犯罪危害防制條例/.test(W)) add('info', C3, '加重詐欺未提及詐欺犯罪危害防制條例', '113年8月2日施行之該條例第43條、第44條（加重）及第47條（自白減刑）是否審酌，請確認。', [fraud[0]]);
+      if (fraud.length && !/詐欺犯罪危害防制條例/.test(W)) add('info', C3, '加重詐欺未提及詐欺犯罪危害防制條例', '113年8月2日施行之該條例第43條、第44條（加重）及第47條（自白減刑）是否審酌，請確認（該條例第43條、第44條、第47條另於115年1月21日修正公布、同月23日生效）。', [fraud[0]]);
+      // 詐欺犯罪危害防制條例（115.1.23修正生效）與刑法第216條
+      var FL = '詐欺犯罪危害防制條例';
+      var fc = cites.filter(function (c) { return c.law === FL; });
+      var fcA = function (a) { return fc.filter(function (c) { return c.art === a; }); };
+      var segOf = function (c) { return (/^[\s　]*(前段|中段|後段|但書)/.exec(W.slice(c.pos + c.len, c.pos + c.len + 4)) || [])[1] || ''; };
+      var F115 = '詐欺犯罪危害防制條例第43條、第44條、第47條於115年1月21日修正公布、同月23日生效：§43門檻由500萬元／1億元改為100萬元／1,000萬元／1億元並提高法定刑；§44Ⅰ增訂第3款；§47Ⅰ增設「於偵查中首次自白之日起6個月內支付調（和）解全部金額」要件並改為「得減輕」。';
+      var before115 = factDates.some(function (d) { return dnum(d) < 1150123; });
+      var after115 = factDates.length && factDates.every(function (d) { return dnum(d) >= 1150123; });
+      var oldMark = /修正前(之)?詐欺犯罪危害防制條例/.test(W);
+      var f434447 = fcA('43').concat(fcA('44'), fcA('47'));
+      if (f434447.length && before115 && !oldMark && !cmp) add('warn', C3, '犯罪時間在詐欺條例115年修正前，未見新舊法比較', F115 + '事實有115年1月23日以前之日期，請依刑法第2條第1項比較，並於適用舊法時載明「修正前」（臺高院115上訴909、115原上訴321；高雄高分院115上訴421）。', f434447.slice(0, 3));
+      if (after115 && oldMark) add('error', C3, '犯罪時間在詐欺條例115年修正後，仍引用修正前規定', F115 + '事實所載日期均在115年1月23日以後，應逕適用修正後規定。', allIdx(/修正前(之)?詐欺犯罪危害防制條例/g, W, 0).slice(0, 3));
+      if (after115 && fcA('47').length) {
+        var s47 = sents(W, 0).filter(function (x) { return /詐欺犯罪危害防制條例第\s*47\s*條/.test(x.t) && /自動繳交|犯罪所得/.test(x.t) && !/調解|和解|支付/.test(x.t) && !/修正前/.test(x.t); });
+        if (s47.length) add('warn', C5, '詐欺條例§47Ⅰ仍以「自動繳交犯罪所得」為要件', '修正後§47Ⅰ要件為「偵查及歷次審判中均自白」且「於檢察官偵查中首次自白之日起6個月內支付與被害人達成調解或和解之全部金額」，並改為「得減輕其刑」；事實所載日期均在115年1月23日以後，請依新法審認。', s47.map(function (x) { return { pos: x.pos, len: x.len }; }));
+      }
+      if (fcA('43').length) {
+        var amt = allIdx(/達新臺幣(五百萬|500萬|5,000,000|一百萬|100萬|1,000,000|一千萬|1,000萬|10,000,000)元/g, W, 0);
+        var has500 = amt.filter(function (x) { return /五百萬|500萬|5,000,000/.test(W.substr(x.pos, x.len)); }), has100 = amt.filter(function (x) { return /一百萬|100萬|1,000,000|一千萬|1,000萬|10,000,000/.test(W.substr(x.pos, x.len)); });
+        if (after115 && has500.length) add('warn', C3, '詐欺條例§43門檻仍載「500萬元」', F115 + '行為在生效後，§43前段門檻為「使人交付之財物或財產上利益達新臺幣100萬元」。', has500.slice(0, 3));
+        if (!after115 && before115 && has100.length && !/行為後|修正後|裁判時法/.test(W)) add('warn', C3, '行為在115年1月23日前，§43卻以「100萬元」或「1,000萬元」為門檻', '修正前§43前段門檻為「獲取之財物或財產上利益達新臺幣500萬元」，後段為1億元；未達500萬元者不能依修正後新增之100萬元門檻論以§43（刑法第1條罪刑法定、第2條第1項；高雄高分院115上訴421）。', has100.slice(0, 3));
+        if (fcA('43').some(function (c) { return !segOf(c); }) && !/第\s*43\s*條\s*(前段|中段|後段)/.test(W)) add('info', C3, '詐欺條例§43未標示前段／中段／後段', '§43依金額分段（修正後：前段100萬元、中段1,000萬元、後段1億元；修正前：前段500萬元、後段1億元），論罪法條宜標明段別。', fcA('43').slice(0, 2));
+      }
+      if (reasS) {
+        var dup = sents(reasT, reasS.start).filter(function (x) { return /係犯/.test(x.t) && /詐欺犯罪危害防制條例第\s*4[34]\s*條/.test(x.t) && /(及|、|與)(刑法)?第\s*339\s*條之\s*4[^。]{0,30}之三人以上共同詐欺取財罪/.test(x.t); });
+        if (dup.length) add('warn', C3, '詐欺條例§43／§44之罪與刑法§339-4之罪並論', '§43係§339-4之特別規定，應優先適用而不再論§339-4（法條競合，臺高院114上訴4669、臺南高分院115上訴126）；§44Ⅰ屬分則加重之獨立罪名，論以「犯詐欺犯罪危害防制條例第44條第1項第1款之三人以上共同以網際網路對公眾散布而犯詐欺取財罪」即可（臺中高分院114金上訴2501）。', dup.map(function (x) { return { pos: x.pos, len: x.len }; }));
+        var both = sents(reasT, reasS.start).filter(function (x) { return /詐欺犯罪危害防制條例第\s*43\s*條/.test(x.t) && /第\s*44\s*條/.test(x.t) && /係犯/.test(x.t); });
+        if (both.length && !/想像競合|從一重/.test(reasT)) add('info', C3, '§43與§44Ⅰ同時成立，未見想像競合說明', '§43重在詐欺結果、§44Ⅰ重在詐欺手段，二者應依想像競合從一重處斷，並受刑法第55條但書封鎖作用限制（臺中高分院114金上訴2759）。', both);
+      }
+      var c216 = cites.filter(function (c) { return c.law === '刑法' && c.art === '216'; });
+      if (c216.length && reasS) {
+        var s216 = sents(reasT, reasS.start).filter(function (x) { return /係犯/.test(x.t) && /第\s*216\s*條/.test(x.t) && /第\s*21[0-5]\s*條/.test(x.t); });
+        if (s216.length && !/吸收/.test(reasT)) add('info', C3, '行使偽造文書未說明偽造之低度行為為行使之高度行為所吸收', '論以刑法第216條、第210條（或第211條、第212條）之行使偽造文書罪者，其偽造之低度行為應為行使之高度行為所吸收，不另論罪；偽造印章、印文、署押則為偽造文書之階段行為，亦不另論罪。', s216);
+        if (allIdx(/犯(刑法)?第\s*216\s*條之[^，。；]{0,10}罪/g, W, 0).length) add('warn', C3, '僅記載「刑法第216條之罪」', '§216係依所行使之文書性質「依偽造、變造文書或登載不實事項或使登載不實事項之規定處斷」，罪名應連結第210條至第215條，如「刑法第216條、第210條之行使偽造私文書罪」。', allIdx(/犯(刑法)?第\s*216\s*條之[^，。；]{0,10}罪/g, W, 0));
+      }
     })();
 
     // 邏輯規則
@@ -1099,7 +1290,7 @@ var JudgmentCheck = (function () {
       var blank = js.filter(function (L) { var n = L.compact.replace(/^.*?庭/, '').replace(/審判長|法官/g, ''); return !n || /[○〇Ｏ]/.test(n); });
       item('法官署名', blank.length ? 'warn' : 'ok', '刑事訴訟法第51條第2項', blank.length ? '署名空白或以○代替' : js.length + '行', 'warn', blank.map(function (L) { return { pos: L.start, len: L.end - L.start }; }));
       if (proc === '通常' && caseNo && /訴/.test(caseNo.zi) && !js.some(function (L) { return /審判長/.test(L.compact); }))
-        add('info', C4, '通常程序未見審判長署名', '第一審除刑事訴訟法第284條之1所定得獨任之案件外，應行合議審判，請確認。', []);
+        add('info', C4, '通常程序未見審判長署名', '第一審除刑事訴訟法第284條之1所定得獨任之案件外，應行合議審判，請確認' + (/詐欺/.test(W) ? '（詐欺犯罪危害防制條例第44條第4項：犯詐欺犯罪，非屬刑事訴訟法第284條之1第1項之第一審應行合議審判案件，得獨任審判）' : '') + '。', []);
     })();
     // 上訴教示
     (function () {
@@ -1474,7 +1665,7 @@ var JudgmentCheck = (function () {
     var oldArts = {}; each(/修正前(之)?(中華民國刑法|刑法|洗錢防制法|毒品危害防制條例|槍砲彈藥刀械管制條例|組織犯罪防制條例)?第\s*(\d+)\s*條(?:之\s*(\d+))?/g, W, 0, function (m) { oldArts[(m[2] ? normLaw(m[2]) : '*') + '|' + m[3] + (m[4] ? '-' + m[4] : '')] = 1; });
     var oldML = crimeCites.some(function (c) { return c.law === '洗錢防制法' && c.art === '14'; });
     var fromOne = (/從一重(?:之|論以|論處|以)?([^。，；]{2,30}?罪)(?:處斷|論處)/.exec(reasT) || [])[1];
-    var CRE = /犯(?!罪)([^，。；、：\n如]{1,40}?罪)/g;
+    var CRE = /犯(?!罪)((?:(?:修正前)?詐欺犯罪危害防制條例[^，。；：\n如]{1,70}?|[^，。；、：\n如]{1,40}?)罪)(?!危害防制)/g;
     var ARTRE = /犯([^，。；\n]{0,24}?)第\s*([0-9０-９一二三四五六七八九十百零〇]+)\s*條(?:之\s*([0-9一二三四五六七八九十]+))?(?:第\s*([0-9一二三四五六七八九十]+)\s*項)?[^，。；]{0,30}?之[^，。；]{0,20}罪/g;
     var sentencing = [], needLifeNote = false;
     groups.forEach(function (G) {
@@ -1483,8 +1674,9 @@ var JudgmentCheck = (function () {
       var ev = [];
       each(CRE, gt, gs, function (m, pos) { ev.push({ pos: pos, name: m[1], e: null }); });
       each(ARTRE, gt, gs, function (m, pos) {
-        var lawN = /毒品/.test(m[1]) ? '毒品危害防制條例' : /洗錢/.test(m[1]) ? '洗錢防制法' : /槍砲/.test(m[1]) ? '槍砲彈藥刀械管制條例' : /組織犯罪/.test(m[1]) ? '組織犯罪防制條例' : '刑法';
+        var lawN = /詐欺犯罪/.test(m[1]) ? '詐欺犯罪危害防制條例' : /毒品/.test(m[1]) ? '毒品危害防制條例' : /洗錢/.test(m[1]) ? '洗錢防制法' : /槍砲/.test(m[1]) ? '槍砲彈藥刀械管制條例' : /組織犯罪/.test(m[1]) ? '組織犯罪防制條例' : '刑法';
         var e = crimeByCite(lawN, String(parseNum(m[2])), m[3] ? String(parseNum(m[3])) : '', m[4] ? String(parseNum(m[4])) : '');
+        if (e && lawN === '詐欺犯罪危害防制條例' && e.art === '43') e = CRIME_BY_K[/後段|一億|1億/.test(m[0]) ? '詐43-3' : /中段|一千萬|1,?000萬/.test(m[0]) ? '詐43-2' : '詐43-1'];
         ev.push({ pos: pos, name: m[0].replace(/^犯/, ''), e: e });
       });
       ev.sort(function (a, b) { return a.pos - b.pos; });
@@ -1503,6 +1695,8 @@ var JudgmentCheck = (function () {
         var e = c && c.e ? c.e : lookupCrime(name);
         if (!e && fromOne && decl.length === 1) { e = lookupCrime(fromOne); if (e) name = fromOne; }
         if (!e) return;
+        // 詐欺條例罪名：未引該條例第43／44條者（如113.8.2前依刑法§339-4Ⅰ②③論「三人以上共同以網際網路對公眾散布而犯詐欺取財罪」），回歸刑法§339-4
+        if (/^詐4[34]/.test(e.k) && !(c && c.e) && !new RegExp('詐欺犯罪危害防制條例(（[^）]*）)?第\\s*' + e.art + '\\s*條').test(W)) e = CRIME_BY_K['339-4'];
         if (e.law === '洗錢防制法' && e.art === '19' && oldML) e = CRIME_BY_K['洗14-1'];
         if (e.law === '刑法' && (oldArts['刑法|' + e.art] || oldArts['*|' + e.art]) || (e.law !== '刑法' && oldArts[e.law + '|' + e.art] && !e.old)) {
           sentencing.push({ label: pre + name, crime: e.n, note: '理由適用修正前法律，未套用現行法定刑表', term: tname(t), ok: null }); return;
@@ -1532,10 +1726,10 @@ var JudgmentCheck = (function () {
         o.half += fx.halfGen; if (fx.halfGen) why.push('其他減輕其刑事由×' + fx.halfGen);
         o.two += fx.twoGen; if (fx.twoGen) why.push('減輕或免除其刑事由×' + fx.twoGen);
         if (/毒品|藥事/.test(e.law)) { if (fx.drug17b) { o.half++; why.push('毒品條例§17Ⅱ'); } if (fx.drug17a) { o.two++; why.push('毒品條例§17Ⅰ'); } }
-        if (e.art === '339-4' || e.k === '339') { if (fx.fraud47a) { o.half++; why.push('詐欺條例§47前段'); } if (fx.fraud47b) { o.two++; why.push('詐欺條例§47後段'); } }
+        if (e.art === '339-4' || e.k === '339' || e.law === '詐欺犯罪危害防制條例') { if (fx.fraud47a) { o.half++; why.push('詐欺條例§47Ⅰ（修正前：前段）'); } if (fx.fraud47b) { o.two++; why.push('詐欺條例§47Ⅱ（修正前：後段）'); } }
         if (e.law === '洗錢防制法' && fx.ml23 && !fx.ml23b) { o.half++; why.push('洗錢防制法自白減輕'); }
         if (e.law === '洗錢防制法' && fx.ml23b) { o.two++; why.push('洗錢防制法§23Ⅱ／Ⅲ後段（減輕或免除）'); }
-        if ((e.art === '339-4' || e.k === '339') && fx.fraud46) { o.two++; why.push('詐欺條例§46（減輕或免除）'); }
+        if ((e.art === '339-4' || e.k === '339' || e.law === '詐欺犯罪危害防制條例') && fx.fraud46) { o.two++; why.push('詐欺條例§46（減輕或免除）'); }
         if (e.law === '組織犯罪防制條例' && fx.org8a) { o.two++; why.push('組織條例§8前段／§3Ⅰ但書（減輕或免除）'); }
         else if (e.law === '組織犯罪防制條例' && fx.org8) { o.half++; why.push('組織條例§8後段'); }
         if (/槍砲/.test(e.law) && fx.gun18) { o.two++; why.push('槍砲條例§18'); }
@@ -2329,6 +2523,12 @@ var JudgmentCheck = (function () {
     E('315-2', '刑法', '315-2', '', '刑法§315-2 散布竊錄內容／意圖散布竊錄', /(散布|播送|販賣|製造)[^罪]*竊錄|意圖(散布|營利)[^罪]*竊錄|意圖營利供給(場所|工具|設備)/, [2, 60], { det: 1, f: ['or', 500000] }),
     E('315', '刑法', '315', '', '刑法§315 妨害書信秘密', /開拆|封緘(信函|文書)/, null, { det: 1, f: ['alt', 9000] }),
     E('315-1', '刑法', '315-1', '', '刑法§315-1 妨害秘密', /妨害秘密|竊錄|窺視|竊聽/, [2, 36], { det: 1, f: ['alt', 300000] }),
+    E('詐44-3', '詐欺犯罪危害防制條例', '44', '3', '詐欺條例§44Ⅲ 發起主持操縱指揮犯罪組織而犯§44Ⅰ之罪', /(發起|主持|操縱|指揮)[^罪]*犯罪組織而犯/, [60, 144], { f: ['opt', 300000000] }),
+    E('詐43-3', '詐欺犯罪危害防制條例', '43', '', '詐欺條例§43後段 加重詐欺使人交付財物達1億元（115.1.23生效）', /使人交付[^罪]*達(新臺幣)?(一億|1億|100,?000,?000)元/, [84, 180], { f: ['opt', 500000000] }),
+    E('詐43-2', '詐欺犯罪危害防制條例', '43', '', '詐欺條例§43中段 加重詐欺使人交付財物達1,000萬元（115.1.23生效）', /達(新臺幣)?(一千萬|1,?000萬|10,?000,?000)元/, [60, 144], { f: ['opt', 300000000] }),
+    E('詐43-1', '詐欺犯罪危害防制條例', '43', '', '詐欺條例§43前段 加重詐欺使人交付財物達100萬元（修正前：獲取財物達500萬元）', /(交付|獲取)之?財物(或財產上利益)?(且|而)?達(新臺幣)?(一百萬|100萬|1,?000,?000|五百萬|500萬|5,?000,?000)元/, [36, 120], { f: ['opt', 30000000] }),
+    E('詐44-1', '詐欺犯罪危害防制條例', '44', '1', '詐欺條例§44Ⅰ 三人以上共同詐欺並有同條項各款情形（加重二分之一，最高最低度同加）', /三人以上共同[^罪]*(網際網路|冒用政府機關|電腦合成|領域外|未滿十八歲|未滿18歲|滿八十歲|非本國籍)[^罪]*詐欺|(網際網路|冒用政府機關|電腦合成)[^罪]*三人以上[^罪]*詐欺/, [18, 126], { f: ['opt', 1500000] }),
+    E('213', '刑法', '213', '', '刑法§213 公務員登載不實', /公務員登載不實|登載於職務上所掌之公文書/, [12, 84]),
     E('339-4', '刑法', '339-4', '1', '刑法§339-4 加重詐欺', /三人以上共同.*詐欺|加重詐欺|冒用政府機關.*詐欺|網際網路.*詐欺|傳播工具.*詐欺|電腦合成.*詐欺/, [12, 84], { f: ['opt', 1000000] }),
     E('321', '刑法', '321', '1', '刑法§321 加重竊盜', /加重竊盜|攜帶兇器.*竊盜|(毀越|毀壞|踰越).*竊盜|侵入住宅.*竊盜|結夥三人以上.*竊盜|第三百二十一條|第321條/, [6, 60], { f: ['opt', 500000] }),
     E('306', '刑法', '306', '1', '刑法§306 侵入住居', /侵入.*(住宅|住居|建築物)/, [2, 12], { det: 1, f: ['alt', 9000] }),
@@ -2454,7 +2654,7 @@ var JudgmentCheck = (function () {
     var y = Math.floor(m / 12 + 1e-9), r = m - y * 12, mo = Math.floor(r + 1e-9), d = Math.floor((r - mo) * 30 + 1e-6);
     return (y ? y + '年' : '') + (mo ? mo + '月' : '') + (d ? d + '日' : '') || '0月';
   }
-  function fmtNT(v) { return v >= 10000 && v % 10000 === 0 ? (v / 10000).toLocaleString('en-US') + '萬' : v.toLocaleString('en-US'); }
+  function fmtNT(v) { return v >= 1e8 && v % 1e8 === 0 ? (v / 1e8).toLocaleString('en-US') + '億' : v >= 10000 && v % 10000 === 0 ? (v / 10000).toLocaleString('en-US') + '萬' : v.toLocaleString('en-US'); }
   function practLo(lo) { return lo == null ? null : Math.max(1, Math.ceil(lo - 1e-6)); }
   function practHi(hi, ex) { return hi == null ? null : ex ? Math.ceil(hi - 1e-6) - 1 : Math.floor(hi + 1e-6); }
   function calcRange(e, o) {
@@ -2870,7 +3070,7 @@ var JudgmentCheck = (function () {
   function lawOf(s) { for (var i = 0; i < LAW_ALIAS.length; i++) if (LAW_ALIAS[i][0].test(s)) return LAW_ALIAS[i][1]; return null; }
   function parseStatutes(text) {
     var t = normDigits(String(text || '')).replace(/[§]/g, '第').replace(/\s+/g, '');
-    var re = new RegExp('((?:中華民國)?刑法|刑(?=第|\\d)|[\\u4e00-\\u9fff]{2,14}?(?:法|條例))?(?:同法|同條例)?第?(' + N_ + ')條?(?:(?:之|-)(' + N_ + '))?條?(?:第(' + N_ + ')項|([ⅠⅡⅢⅣⅤⅥⅦⅧ]))?((?:第' + N_ + '(?:、' + N_ + ')*款|[①②③④⑤⑥⑦⑧⑨]+|第' + N_ + '款(?:、第' + N_ + '款)*))?(前段|後段|但書)?', 'g');
+    var re = new RegExp('((?:中華民國)?刑法|刑(?=第|\\d)|[\\u4e00-\\u9fff]{2,14}?(?:法|條例))?(?:同法|同條例)?第?(' + N_ + ')條?(?:(?:之|-)(' + N_ + '))?條?(?:第(' + N_ + ')項|([ⅠⅡⅢⅣⅤⅥⅦⅧ]))?((?:第' + N_ + '款(?:、第' + N_ + '款)+|第' + N_ + '(?:、' + N_ + ')*款|[①②③④⑤⑥⑦⑧⑨]+))?(前段|中段|後段|但書)?', 'g');
     var out = [], law = '刑法', m;
     while ((m = re.exec(t))) {
       if (!m[0] || !m[2]) { re.lastIndex++; continue; }
@@ -2903,6 +3103,9 @@ var JudgmentCheck = (function () {
       if (s.law === '兒童及少年福利與權益保障法' && s.art === '112') { mods.k112 = s; return; }
       if (s.law === '銀行法' && s.art === '125-2' && s.item === '2') { mods.spBank = s; return; }
       if (s.law === '森林法' && s.art === '51' && s.item === '3') { mods.spForest = s; return; }
+      if (s.law === '詐欺犯罪危害防制條例' && s.art === '43') { crimes.push({ e: CRIME_BY_K[{ '中段': '詐43-2', '後段': '詐43-3' }[s.seg] || '詐43-1'], s: s }); return; }
+      if (s.law === '詐欺犯罪危害防制條例' && s.art === '44' && s.item === '3') { crimes.push({ e: CRIME_BY_K['詐44-3'], s: s }); return; }
+      if (s.law === '詐欺犯罪危害防制條例' && s.art === '45') { mods.f45 = s; return; }
       if (s.law === '詐欺犯罪危害防制條例') { if (s.art === '46') { mods.f46 = s; return; } if (s.art === '44') mods.sp44 = s; else if (s.art === '47') mods[/後段|2/.test(s.seg + s.item) ? 'f47b' : 'f47a'] = s; else if (s.art === '43') unknown.push(s); return; }
       if (s.law === '毒品危害防制條例' && s.art === '17') { mods[s.item === '1' ? 'd17a' : 'd17b'] = s; return; }
       if (s.law === '毒品危害防制條例' && s.art === '9') { mods.sp9 = s; return; }
@@ -2924,6 +3127,16 @@ var JudgmentCheck = (function () {
     var e = c.e, k = e.k, ks = c.s.kuan || [], mk = MN_KUAN[k], n;
     if (mk) n = ks.length > 1 ? mk.many(ks) : ks.length === 1 ? (mk[ks[0]] || mk.none) : mk.none;
     else n = MN[k] || P('罪名') + '罪';
+    var K44 = { 1: '冒用政府機關及公務員名義', 3: '以網際網路對公眾散布而', 4: '以電腦合成或其他科技方法製作關於他人不實影像、聲音或電磁紀錄之方法' };
+    var fraudCore = function () { var ks2 = (o.k339 || [2]).filter(function (x) { return x !== 2; }); return '三人以上共同' + (ks2.length ? ks2.map(function (x) { return K44[x] || ''; }).join('、') : '') + '詐欺取財'; };
+    if (k === '339-4' && o.sp44) {
+      var a = o.sp44k || [1];
+      n = a[0] === 2 ? '三人以上共同在中華民國領域外以供詐欺犯罪所用之設備對於中華民國領域內之人犯詐欺取財罪' : a[0] === 3 ? '三人以上共同' + P('利用未滿十八歲之人／與滿八十歲之人共同／與非本國籍人士共同') + '犯詐欺取財罪' : fraudCore().replace(/而詐欺取財$/, '而犯詐欺取財').replace(/(名義|方法)詐欺取財$/, '$1犯詐欺取財') + '罪';
+    }
+    if (/^詐43/.test(k)) n = '三人以上共同詐欺取財且使人交付之財物達新臺幣' + { '詐43-1': '100萬元', '詐43-2': '1,000萬元', '詐43-3': '1億元' }[k] + '罪';
+    if (k === '詐44-3') n = P('發起／主持／操縱／指揮') + '犯罪組織而犯' + fraudCore().replace(/而詐欺取財$/, '詐欺取財') + '罪';
+    if (o.use216 && /^21[345]$/.test(k)) n = { '213': '行使公務員登載不實公文書罪', '214': '行使使公務員登載不實文書罪', '215': '行使業務上登載不實文書罪' }[k];
+    if (!o.use216 && /^21[012]$/.test(k)) n = n.replace(/^行使/, '');
     if (/^毒4-/.test(k) && o.drugAct) n = n.replace('販賣', o.drugAct);
     if (o.attempt) n = n.replace(/罪$/, '未遂罪');
     return n;
@@ -2941,9 +3154,11 @@ var JudgmentCheck = (function () {
   // 事實欄構成要件要素（依最高法院撤銷發回指摘整理）
   function factElems(crimes, f, isFraud, isML) {
     var out = [], k = crimes.map(function (c) { return c.e.k; }), has = function (re) { return k.some(function (x) { return re.test(x); }); };
-    if (has(/^(339|320|321|325|326|328|329|330|335|336|337|346)/)) out.push('不法所有意圖（「意圖為自己不法之所有」）');
-    if (isFraud) out.push('詐術內容、被害人陷於錯誤、交付財物之時地金額（114台上3753）');
-    if (has(/^339-4/)) out.push('「三人以上」之犯意聯絡及共犯（含暱稱，無證據證明為未成年人）');
+    if (has(/^(339|詐4|320|321|325|326|328|329|330|335|336|337|346)/)) out.push('不法所有意圖（「意圖為自己不法之所有」）');
+    if (isFraud || has(/^詐4/)) out.push('詐術內容、被害人陷於錯誤、交付財物之時地金額（114台上3753）');
+    if (has(/^339-4|^詐4/)) out.push('「三人以上」之犯意聯絡及共犯（含暱稱，無證據證明為未成年人）');
+    if (has(/^詐43/)) out.push('被害人交付財物之時間、方式及合計金額已達§43門檻（行為時法：500萬元；115年1月23日以後：100萬元、1,000萬元、1億元），中途加入者僅計其應負責部分（臺高院115上訴541）');
+    if (f.sp44 || has(/^詐44/)) out.push('並犯§339-4Ⅰ①③④（冒用公務員名義、網際網路對公眾散布、電腦合成）或境外設備、或利用／與未滿18歲、滿80歲、非本國籍人士共同之事實，及被告對此加重情狀之認識（臺中高分院115金上訴214）');
     if (has(/^組/)) out.push('加入犯罪組織（三人以上、以實施詐術為手段、具持續性牟利性之有結構性組織）之認識與意欲（113台上4580）');
     if (isML) out.push('以何方式掩飾、隱匿犯罪所得去向（製造金流斷點）');
     if (has(/^21[0-8]$/)) out.push('「足生損害於」公眾或他人（臺高院114上訴5136）');
@@ -2964,6 +3179,15 @@ var JudgmentCheck = (function () {
     if (f.k112) out.push('被告為成年人，明知或可得而知對方為兒童或少年（109台上3717）');
     return out;
   }
+  function fraudStatFn(f) {
+    return function (c, full) {
+      var k = c.e.k, k339 = (f.k339 || [2]).slice().sort(), kTxt = '刑法第339條之4第1項' + k339.map(function (x) { return '第' + x + '款'; }).join('、').replace(/、第/g, '、第');
+      if (k === '339-4' && f.sp44) return '詐欺犯罪危害防制條例第44條第1項第' + (f.sp44k || [1]).join('、') + '款' + (full ? '、' + kTxt : '');
+      if (/^詐43/.test(k)) return '詐欺犯罪危害防制條例第43條' + ({ '詐43-1': '前段', '詐43-2': '中段', '詐43-3': '後段' }[k]);
+      if (k === '詐44-3') return '詐欺犯罪危害防制條例第44條第3項' + (full ? '、第1項第' + (f.sp44 ? (f.sp44k || [1]).join('、') : P('1')) + '款' : '');
+      return '';
+    };
+  }
   function buildDraft(o) {
     var parsed = classify(parseStatutes(o.statutes));
     var M = parsed.mods, crimes = parsed.crimes, notes = [], ranges = [];
@@ -2977,14 +3201,24 @@ var JudgmentCheck = (function () {
       attRed: !o.attNo, helpRed: !o.helpNo,
       k112: o.k112 || (M.k112 ? 'sp' : ''), attempt: o.attempt || !!M.att, role: o.role || (M.help ? 'help' : M.inst ? 'inst' : M.co ? 'co' : 'single')
     };
+    f.use216 = parsed.use216;
+    var fraudStat;
+    f.sp44k = M.sp44 && M.sp44.kuan && M.sp44.kuan.length ? M.sp44.kuan : [1];
+    var c3394 = crimes.filter(function (c) { return c.e.k === '339-4'; })[0];
+    f.k339 = c3394 && c3394.s.kuan && c3394.s.kuan.length ? c3394.s.kuan : [2];
+    var hasF43 = crimes.some(function (c) { return /^詐43/.test(c.e.k); }), hasF443 = crimes.some(function (c) { return c.e.k === '詐44-3'; });
+    var dropped339 = false;
+    if (c3394 && (hasF443 || (hasF43 && !f.sp44))) { crimes = crimes.filter(function (c) { return c !== c3394; }); dropped339 = true; }
+    fraudStat = fraudStatFn(f);
     var multi = crimes.length > 1, rel = multi ? (o.rel || (M.imag ? 'imag' : 'imag')) : 'single';
     var counts = Math.max(1, +o.counts || 1);
-    var main = crimes.slice().sort(function (a, b) { return weight(b.e) - weight(a.e); })[0];
+    var wt = function (c) { return c.e.k === '339-4' && f.sp44 ? weight(CRIME_BY_K['詐44-1']) : weight(c.e); };
+    var main = crimes.slice().sort(function (a, b) { return wt(b) - wt(a); })[0];
     var inOrder = crimes;
     var proc = o.proc || '通常', combined = proc !== '通常' && o.cite !== 'own';
     var isSex = crimes.some(function (c) { return /^22[1-8]/.test(c.e.k); }), isDV = !!o.dv || crimes.some(function (c) { return c.e.k === '家暴61'; });
     var isNeg = crimes.some(function (c) { return /^(276|284)/.test(c.e.k); });
-    var isDrug = crimes.some(function (c) { return /^毒/.test(c.e.k); }), isFraud = crimes.some(function (c) { return /^339/.test(c.e.k); }), isDefam = crimes.some(function (c) { return /^30[9]|^310/.test(c.e.k); });
+    var isDrug = crimes.some(function (c) { return /^毒/.test(c.e.k); }), isFraud = crimes.some(function (c) { return /^339|^詐4/.test(c.e.k); }), isDefam = crimes.some(function (c) { return /^30[9]|^310/.test(c.e.k); });
     var isML = crimes.some(function (c) { return /^洗/.test(c.e.k); });
     // 處斷刑
     function factorsFor(c, blockMin) {
@@ -3012,10 +3246,10 @@ var JudgmentCheck = (function () {
       f.rTwo.forEach(function (k) { x.two++; why.push({ r154: '§154Ⅱ', r166: '§166', r172: '§172', r2271: '§227-1' }[k] + '（減輕或免除）'); });
       if (f.f31 === 'y') { x.half++; why.push('§31Ⅰ但書'); }
       if (/^毒|^藥83/.test(e.k)) { if (f.d17b) { x.half++; why.push('毒品條例§17Ⅱ'); } if (f.d17a) { x.two++; why.push('毒品條例§17Ⅰ'); } }
-      if (/^339/.test(e.k)) { if (f.f47a) { x.half++; why.push('詐欺條例§47前段'); } if (f.f47b) { x.two++; why.push('詐欺條例§47後段'); } }
+      if (/^339|^詐4/.test(e.k)) { if (f.f47a) { x.half++; why.push('詐欺條例§47Ⅰ（修正前：前段）'); } if (f.f47b) { x.two++; why.push('詐欺條例§47Ⅱ（修正前：後段）'); } }
       if (/^洗/.test(e.k) && f.mlb) { x.two++; why.push('洗錢防制法§23Ⅱ／Ⅲ後段（減輕或免除）'); }
       else if (/^洗/.test(e.k) && f.ml) { x.half++; why.push('洗錢防制法自白減輕'); }
-      if (/^339/.test(e.k) && f.f46) { x.two++; why.push('詐欺條例§46（得減輕或免除）'); }
+      if (/^339|^詐4/.test(e.k) && f.f46) { x.two++; why.push('詐欺條例§46（得減輕或免除）'); }
       if (/^組/.test(e.k) && f.org8a) { x.two++; why.push('組織條例§8前段（減輕或免除）'); } else if (/^組/.test(e.k) && f.org8) { x.half++; why.push('組織條例§8後段'); }
       if (/^槍/.test(e.k) && f.gun18) { x.two++; why.push('槍砲條例§18（減輕或免除）'); }
       if (/^槍/.test(e.k) && f.gun18b) { x.gen3++; why.push('槍砲條例§18Ⅳ後段（加重至⅓）'); }
@@ -3043,7 +3277,7 @@ var JudgmentCheck = (function () {
       for (var i = 0; i < CAUSE.length; i++) if (CAUSE[i][0].test(e.k)) return CAUSE[i][1] + (f.attempt && /殺人|強盜|強制性交/.test(CAUSE[i][1]) ? '未遂' : '');
       return P('案由');
     }
-    var cause = main ? causeOf(main) : P('案由');
+    var cause = main ? (main.e.k === '339-4' && f.sp44 ? '違反詐欺犯罪危害防制條例' : causeOf(main)) : P('案由');
     if (o.changeCharge) cause = P('起訴書所載罪名（案由依起訴法條，不隨變更）');
     if (isDV && main && main.e.law === '刑法') cause = '家庭暴力之' + cause;
     if (multi && rel === 'many' && crimes.map(causeOf).filter(function (v, i, a) { return a.indexOf(v) === i; }).length > 1) cause += '等';
@@ -3138,7 +3372,8 @@ var JudgmentCheck = (function () {
       else if (e.f && e.f[0] === 'opt' && o.addFine) term += '，併科罰金新臺幣' + P('　') + '元，罰金如易服勞役，以新臺幣' + P('1,000') + '元折算1日';
       if (/處(死刑|無期徒刑)/.test(term)) term += '，褫奪公權終身';
       var cnt = (rel !== 'many' && counts > 1) ? '，共' + counts + '罪，各' : '，';
-      mainLines.push(who + nm + cnt + term.replace(/^處/, cnt === '，' ? '處' : '處'));
+      var fst = fraudStat(rg.c);
+      mainLines.push(who + (fst ? fst + '之' : '') + nm + cnt + term.replace(/^處/, cnt === '，' ? '處' : '處'));
     });
     var line = mainLines.join('；') + '。';
     var needAgg = (rel === 'many' && ranges.length > 1) || counts > 1;
@@ -3187,21 +3422,23 @@ var JudgmentCheck = (function () {
       L.push('　　　　' + (proc === '通常' ? '犯罪事實' : '事實及理由'));
       H('只記載構成要件事實；前科、案源、查獲經過、扣案物、累犯自首等不寫入。第一次日期冠「民國」（不加下同），第一次金額冠「新臺幣（下同）」。〔簡報①第159–198張；簡報③第34張〕');
       var coName = '真實姓名年籍不詳、通訊軟體暱稱「' + P('　') + '」等成年人（無證據證明為未滿18歲之人）';
-      var forge = crimes.some(function (x) { return /^21[02]$/.test(x.e.k); }) && crimes.some(function (x) { return x.e.k === '339-4'; });
-      factList = inOrder.filter(function (c) { return !(rel === 'imag' && (/^洗19/.test(c.e.k) || (forge && /^21[02]$/.test(c.e.k)) || (/^組/.test(c.e.k) && crimes.some(function (x) { return x.e.k === '339-4'; }))) && crimes.some(function (x) { return x.e.k === '339-4'; })); })
+      var forge = crimes.some(function (x) { return /^21[02]$/.test(x.e.k); }) && crimes.some(function (x) { return /^339-4$|^詐4/.test(x.e.k); });
+      factList = inOrder.filter(function (c) { return !(rel === 'imag' && (/^洗19/.test(c.e.k) || (forge && /^21[02]$/.test(c.e.k)) || (/^組/.test(c.e.k) && crimes.some(function (x) { return /^339-4$|^詐4/.test(x.e.k); }))) && crimes.some(function (x) { return /^339-4$|^詐4/.test(x.e.k); })); })
         .sort(function (a, b) { return (/^組/.test(b.e.k) ? 1 : 0) - (/^組/.test(a.e.k) ? 1 : 0); });
       factList.forEach(function (c, i) {
-        var t = FT[c.e.k] || FT[c.e.k.replace(/-[a-z]$/, '')] || (c.e.k === '321' ? FT['321'] : null);
+        var t = (/^詐4/.test(c.e.k) ? FT['339-4'] : null) || FT[c.e.k] || FT[c.e.k.replace(/-[a-z]$/, '')] || (c.e.k === '321' ? FT['321'] : null);
         if (!t) t = '{N}基於' + P('犯意') + '之犯意，於民國' + P('　') + '年' + P('　') + '月' + P('　') + '日' + P('　') + '時許，在' + P('地點') + '，' + P('符合構成要件之具體行為') + '，致' + P('結果') + '。';
         if (c.e.k === '321') {
           var ks = c.s.kuan && c.s.kuan.length ? c.s.kuan : [3];
           t = t.replace('{KUANI}', ks.map(function (k) { return (KUAN321[k] || ['', ''])[0]; }).join('、')).replace('{KUANT}', ks.map(function (k) { return (KUAN321[k] || ['', ''])[1]; }).join(''));
         }
-        var mlOn = isML && c.e.k === '339-4';
+        var mlOn = isML && /^339-4$|^詐4/.test(c.e.k);
         t = t.split('{N}').join(i === 0 ? N : N).replace('{共犯}', coName).replace('{洗錢意}', mlOn ? '及一般洗錢' : '').replace('{洗錢客}', mlOn ? '，以此方式製造金流斷點，掩飾、隱匿詐欺所得之去向' : '');
-        if (c.e.k === '339-4' && rel === 'imag' && crimes.some(function (x) { return /^組/.test(x.e.k); })) t = t.replace(N + '與', N + '於民國〔　〕年〔　〕月間，加入' + '〔暱稱〕等人所組成三人以上，以實施詐術為手段，具有持續性、牟利性之有結構性組織（下稱本案詐欺集團），擔任〔角色〕，而與');
-        if (c.e.k === '339-4' && forge) t = t.replace('之犯意聯絡', '、行使偽造私文書、行使偽造特種文書之犯意聯絡').replace('〔提領／收取〕後轉交〔上手〕', '出示偽造之〔公司名稱〕〔職稱〕〔名義人〕工作證，並交付偽造之〔公司名稱〕收據（其上有偽造之〔印文／署押〕）予〔被害人〕而行使之，足生損害於〔公司名稱〕、〔名義人〕及〔被害人〕，收取款項後依指示轉交〔上手／置於指定地點〕');
-        if (f.role === 'help' && (isFraud || isML) && (c.e.k === '339' || /^洗/.test(c.e.k) || c.e.k === '339-4')) { if (factList.indexOf(c) > 0) return; t = FT_HELP.split('{N}').join(N); }
+        if (/^339-4$|^詐4/.test(c.e.k) && rel === 'imag' && crimes.some(function (x) { return /^組/.test(x.e.k); })) t = t.replace(N + '與', N + '於民國〔　〕年〔　〕月間，加入' + '〔暱稱〕等人所組成三人以上，以實施詐術為手段，具有持續性、牟利性之有結構性組織（下稱本案詐欺集團），擔任〔角色〕，而與');
+        if (/^339-4$|^詐4/.test(c.e.k) && forge) t = t.replace('之犯意聯絡', '、行使偽造私文書、行使偽造特種文書之犯意聯絡').replace('〔提領／收取〕後轉交〔上手〕', '出示偽造之〔公司名稱〕〔職稱〕〔名義人〕工作證，並交付偽造之〔公司名稱〕收據（其上有偽造之〔印文／署押〕）予〔被害人〕而行使之，足生損害於〔公司名稱〕、〔名義人〕及〔被害人〕，收取款項後依指示轉交〔上手／置於指定地點〕');
+        if (f.role === 'help' && (isFraud || isML) && (c.e.k === '339' || /^洗/.test(c.e.k) || /^339-4$|^詐4/.test(c.e.k))) { if (factList.indexOf(c) > 0) return; t = FT_HELP.split('{N}').join(N); }
+        if (/^詐43/.test(c.e.k)) t = t.replace(/。$/, '。〔被害人〕因而交付之財物合計' + P('金額') + '元，已達新臺幣' + { '詐43-1': '100萬元（行為在115年1月23日前：詐欺獲取之財物達500萬元）', '詐43-2': '1,000萬元', '詐43-3': '1億元' }[c.e.k] + '。');
+        if (c.e.k === '詐44-3') t = t.replace(N + '與', N + '發起、主持、〔操縱／指揮〕由〔成員〕等人組成三人以上，以實施詐術為手段，具有持續性、牟利性之有結構性組織，並指揮〔成員〕等人，與');
         if (i > 0 && rel === 'many') t = t.replace(N + '基於', N + '另行起意，基於');
         if (f.attempt) t = t.replace(/得手後離去|得逞|而交付[^。]*。$/, '〔著手之具體行為〕，惟〔未遂原因〕而未遂');
         if (f.k112 === 'sp') t = t.replace(/^/, '〔被害人〕係〔民國　年生之少年／兒童〕，' + N + '為成年人，明知或可得而知〔被害人〕未滿18歲，');
@@ -3266,6 +3503,7 @@ var JudgmentCheck = (function () {
       if (isML) H('洗錢防制法113年7月31日修正公布、8月2日施行（舊§14→§19、舊§16Ⅱ→§23Ⅲ），行為在施行前者應比較新舊法；在施行後者逕適用新法。新舊法比較宜簡略記載結論。〔簡報③第40、149張〕');
     }
     var cites = crimes.map(function (c) {
+      var fst2 = fraudStat(c, true); if (fst2) return fst2 + '之' + crimeName(c, f);
       var s = c.s, t = (s.law === '刑法' ? '刑法' : s.law) + '第' + s.art + '條' + (s.sub ? '之' + s.sub : '') + (s.item ? '第' + s.item + '項' : '') + (s.kuan && s.kuan.length ? '第' + s.kuan.join('、') + '款' : '') + (s.seg || '');
       if (parsed.use216 && /^21[0-5]$/.test(s.art)) t = '刑法第216條、第' + s.art + '條';
       if (f.attempt && s.law === '刑法') t = t.replace(/第(\d+)條(之\d+)?第1項/, '第$1條$2第2項、第1項');
@@ -3275,6 +3513,14 @@ var JudgmentCheck = (function () {
     var spTxt = f.k112 === 'sp' ? '兒童及少年福利與權益保障法第112條第1項前段、' : '';
     var helpTxt = f.role === 'help' ? '刑法第30條第1項前段、' : '';
     sub('核被告所為，' + (crimes.length > 1 && rel === 'many' ? '就犯罪事實一' + P('所為') + '，' : '') + '係犯' + helpTxt + spTxt + (rel === 'many' ? cites.join('；') : (cites.length > 1 ? cites.slice(0, -1).join('、') + '及' + cites[cites.length - 1] : cites[0] || P('罪名'))) + '。' + (f.k112 === 'sp' ? '被告為成年人，〔被害人〕為〔少年／兒童〕，應依兒童及少年福利與權益保障法第112條第1項前段規定加重其刑（分則加重，已為獨立罪名）。' : ''));
+    if (dropped339 && hasF43 && !hasF443) sub('詐欺犯罪危害防制條例第43條係以刑法第339條之4之罪為基礎，就被害人交付財物達一定數額者另為加重處罰之特別規定，應優先適用，自毋庸再論以刑法第339條之4之罪。');
+    if (dropped339 && hasF443) sub('詐欺犯罪危害防制條例第44條第3項係就發起、主持、操縱或指揮犯罪組織而犯同條第1項之罪者另定處罰，應優先適用，不另論以刑法第339條之4之罪。');
+    if (c3394 && f.sp44 && !dropped339) sub('被告所為同時該當刑法第339條之4第1項第2款及第' + (f.k339.filter(function (x) { return x !== 2; }).join('、') || P('1、3、4')) + '款之情形，應依詐欺犯罪危害防制條例第44條第1項第' + f.sp44k.join('、') + '款規定加重其刑二分之一（最高度及最低度同加之），此係就犯罪類型變更之個別犯罪行為予以加重，屬刑法分則加重性質，為獨立之罪名。');
+    if (hasF43 && f.sp44) sub('被告所犯詐欺犯罪危害防制條例第43條' + P('前段') + '及第44條第1項第' + f.sp44k.join('、') + '款之罪，前者重在詐欺結果之加重，後者重在詐欺手段之加重，二者構成要件部分重合而非包攝關係，應依想像競合犯從一重處斷，並受刑法第55條但書封鎖作用之限制。');
+    if (hasF43) { H('§43為客觀處罰條件，以單一被害人單筆或接續交付、或同一詐欺行為數被害人合計之金額計算，不以行為人主觀認識具體數額為必要（臺南高分院115上訴126；立法理由）；惟中途加入或脫離之共同正犯，僅就其應負責部分計算（臺高院115上訴541）。數詐欺行為分別詐騙數被害人而構成數罪者，不得合計。'); H('§43於115年1月21日修正公布、1月23日生效：門檻由「詐欺獲取之財物達500萬元／1億元」改為「使人交付之財物達100萬元／1,000萬元／1億元」並提高刑度。行為在生效前者應比較新舊法，高等法院多認新法未較有利而適用行為時法，罪名記載為「修正前詐欺犯罪危害防制條例第43條前段之三人以上共同詐欺取財且詐欺獲取之財物達500萬元罪」（臺高院115上訴909、115原上訴321）；行為時金額未達500萬元者不得適用新法之100萬元門檻（高雄高分院115上訴421）。'); }
+    if (c3394 && f.sp44) H('§44Ⅰ屬分則加重之獨立罪名，主文記載「犯詐欺犯罪危害防制條例第44條第1項第1款之三人以上共同以網際網路對公眾散布而犯詐欺取財罪」，論罪後毋庸重複贅述加重（臺中高分院114金上訴2501、1322）；被告須認識並犯同條項第1、3、4款之事實，車手不知網際網路散布者僅論刑法§339-4Ⅰ②（臺中高分院115金上訴214）。115年1月23日修正增訂§44Ⅰ③（利用或與未滿18歲、滿80歲、非本國籍人士共同），行為在生效前者無適用；與兒少權益法§112Ⅰ前段之競合，宜擇一適用以避免重複評價。');
+    if (hasF443) H('§44Ⅲ罪名記載「發起、主持、指揮犯罪組織而犯三人以上共同以網際網路對公眾散布詐欺取財罪」，引用「詐欺犯罪危害防制條例第44條第3項、第1項第1款」（臺南高分院114金上訴2577）；其發起、主持、指揮犯罪組織行為與首次加重詐欺犯行論以想像競合（臺中高分院114金上訴1322）。');
+    if (M.f45) H('§45兩罰規定：法人之代表人、代理人、受僱人等因執行業務犯詐欺犯罪者，除處罰行為人外，對該法人或自然人科以各該條之罰金；法人或自然人為被害人或已盡監督責任者不罰。法人被告主文例：「〔法人名稱〕因其〔受僱人〕執行業務，犯〔罪名〕，科罰金新臺幣〔　〕元。」');
     if (parsed.use216) H('行使他人偽造之私文書：「係犯第216條之行使偽造私文書罪，應依第210條處斷」；自己偽造後行使：「係犯第216條、第210條之行使偽造私文書罪，偽造之低度行為為行使之高度行為吸收」。〔簡報①第237張〕');
     if (o.changeCharge) { sub('公訴意旨認被告係犯' + P('起訴法條') + '，尚有未合，惟二者基本社會事實同一，並經本院告知被告' + P('變更後罪名') + '（' + P('卷頁') + '），爰依刑事訴訟法第300條規定變更起訴法條。'); H('同一性以訴之目的及侵害性行為內容是否同一判斷（侵占↔背信可變更，112台上2077；搶奪↔強制猥褻不可）；逸出同一性即屬訴外裁判。〔研習④吳冠霆第49–60頁；研習①顧正德第49–56頁〕'); }
     var lunHit = [];
@@ -3296,7 +3542,7 @@ var JudgmentCheck = (function () {
     if (f.k112 === 'gen') incs.push('被告為成年人，與少年' + P('姓名（年籍詳卷）') + '共同實施犯罪，應依兒童及少年福利與權益保障法第112條第1項前段規定加重其刑。');
     if (f.sp86) incs.push('被告' + P('未領有駕駛執照駕車／酒醉駕車／…') + '，因而' + P('致人受傷／致人於死') + '，' + P('審酌…，認應／不予') + '依道路交通管理處罰條例第86條第1項第' + P('　') + '款規定加重其刑（屬分則加重，主文併予記載）。');
     if (f.sp150) incs.push('被告' + P('意圖供行使之用而攜帶兇器／因而致生公眾或交通往來之危險') + '，犯刑法第150條第1項之罪，' + P('【加重】審酌〇〇（當時客觀環境、犯罪情節、涉案程度、危險影響程度），認有加重其刑之必要，依同條第2項第〇款規定加重其刑｜【不加重】審酌〇〇，認尚無依同條第2項規定加重其刑之必要') + '（第150條第2項屬分則之相對加重，由法院裁量，112台上4355）。');
-    if (f.sp44) incs.push('被告犯刑法第339條之4第1項第2款之罪，並有' + P('詐欺犯罪危害防制條例第44條第1項各款情形') + '，應依該條項規定加重其刑二分之一。');
+    if (f.sp44 && !c3394) incs.push('被告犯刑法第339條之4第1項第2款之罪，並有' + P('詐欺犯罪危害防制條例第44條第1項各款情形') + '，應依該條項規定加重其刑二分之一。');
     if (f.attempt && f.attRed) decs.push('被告已著手' + P('犯罪') + '之實行而不遂，為未遂犯，依刑法第25條第2項規定，按既遂犯之刑減輕之。');
     if (f.role === 'help' && f.helpRed) decs.push('被告為幫助犯，依刑法第30條第2項規定，按正犯之刑減輕之。');
     if (f.self) decs.push(o.selfT ? '被告於肇事後，在有偵查犯罪職權之公務員尚未發覺其為肇事者前，留在現場並向到場處理之員警坦承為肇事人而願接受裁判，有' + P('○○警察局○○分局') + '道路交通事故肇事人自首情形紀錄表附卷可稽（' + P('卷頁') + '），合於自首要件，依刑法第62條前段規定減輕其刑。' : '被告於有偵查犯罪職權之公務員發覺其犯罪前，主動向' + P('員警') + '坦承犯行並接受裁判，有' + P('證據') + '可佐，合於自首要件，依刑法第62條前段規定減輕其刑。');
@@ -3304,8 +3550,8 @@ var JudgmentCheck = (function () {
     if (f.r19) decs.push('被告行為時因' + P('精神障礙或其他心智缺陷') + '，致其辨識行為違法或依其辨識而行為之能力顯著減低，有' + P('精神鑑定報告') + '可稽（' + P('卷頁') + '），依刑法第19條第2項規定減輕其刑。');
     if (f.d17b && (isDrug || crimes.some(function (c) { return /^藥83/.test(c.e.k); }))) decs.push('被告於偵查及歷次審判中均自白，應依毒品危害防制條例第17條第2項規定減輕其刑。');
     if (f.d17a && isDrug) decs.push('被告供出毒品來源' + P('姓名') + '，因而查獲' + P('其他正犯或共犯') + '，有' + P('查獲證明') + '可稽，依毒品危害防制條例第17條第1項規定減輕其刑' + P('並依刑法第71條第2項先依較少之數減輕') + '。');
-    if (f.f47a && isFraud) decs.push('被告於偵查及歷次審判中均自白，並於檢察官偵查中首次自白之日起6個月內支付與被害人達成' + P('調解／和解') + '之全部金額，依詐欺犯罪危害防制條例第47條前段規定減輕其刑。');
-    if (f.f47b && isFraud) decs.push('被告並因而' + P('查獲發起、主持、操縱或指揮詐欺犯罪組織之人／扣押全部財物') + '，依詐欺犯罪危害防制條例第47條後段規定減輕其刑。');
+    if (f.f47a && isFraud) decs.push(P('【行為在115年1月23日前】被告於偵查及歷次審判中均自白，且' + P('無犯罪所得／已自動繳交犯罪所得新臺幣〇元') + '。詐欺犯罪危害防制條例第47條於115年1月21日修正公布、同年月23日生效，修正後增設於檢察官偵查中首次自白之日起6個月內支付與被害人達成調（和）解之全部金額之要件，並由「減輕其刑」改為「得減輕其刑」，未較有利於被告，依刑法第2條第1項前段規定，應適用修正前同條例第47條前段規定減輕其刑｜【行為在115年1月23日以後】被告於偵查及歷次審判中均自白，並於檢察官偵查中首次自白之日起6個月內支付與被害人達成〔調解／和解〕之全部金額（〔卷頁〕），爰依詐欺犯罪危害防制條例第47條第1項規定減輕其刑') + '。');
+    if (f.f47b && isFraud) decs.push('被告並因而' + P('查獲發起、主持、操縱或指揮詐欺犯罪組織之人／扣押全部財物') + '，依詐欺犯罪危害防制條例' + P('第47條第2項（115年1月23日生效後）／修正前第47條後段') + '規定減輕其刑。');
     if (f.ml && isML) decs.push(rel === 'imag' && main && !/^洗/.test(main.e.k) ? '被告就一般洗錢犯行於偵查及歷次審判中均自白' + P('並自動繳交全部所得財物') + '，原應依洗錢防制法第23條第3項前段減輕其刑，惟其所犯一般洗錢罪屬想像競合犯其中之輕罪，爰於量刑時併予審酌（111台上3778）。' : '被告於偵查及歷次審判中均自白' + P('並自動繳交全部所得財物') + '，依洗錢防制法第23條第3項前段規定減輕其刑。');
     if (f.org8 && crimes.some(function (c) { return /^組/.test(c.e.k); })) decs.push(rel === 'imag' && main && !/^組/.test(main.e.k) ? '被告就參與犯罪組織部分於偵查及歷次審判中均自白，原應依組織犯罪防制條例第8條第1項後段減輕其刑，惟屬想像競合之輕罪，於量刑時併予審酌。' : '被告於偵查及歷次審判中均自白，依組織犯罪防制條例第8條第1項後段規定減輕其刑。');
     if (f.sp286 && crimes.some(function (c) { return /^286/.test(c.e.k); })) incs.push('被害人' + P('代號') + '於案發時為未滿七歲之人，被告' + P('明知／可得而知') + '，應依刑法第286條第3項規定，依各該項之規定加重其刑二分之一（最高度及最低度同加）。');
@@ -3329,7 +3575,7 @@ var JudgmentCheck = (function () {
     if (f.role === 'help' && !f.helpRed) noRed.push('被告為幫助犯，惟本院審酌' + P('被告提供之助力對正犯犯罪之實現影響重大、其幫助行為之可責程度與正犯相當') + '，認不宜依刑法第30條第2項規定按正犯之刑減輕，爰不予減輕其刑。');
     if (o.d17bNo && isDrug) noRed.push('被告' + P('於偵查中否認犯行／於本院審理中翻異前詞否認犯行／偵查中未經檢察官訊問致無自白機會者，應另予說明') + '，未於偵查及歷次審判中均自白，自無毒品危害防制條例第17條第2項減輕其刑規定之適用。');
     if (o.d17aNo && isDrug) noRed.push('被告雖供稱其毒品來源為' + P('姓名或綽號') + '，惟經本院函詢' + P('警察機關／檢察署') + '，覆稱' + P('未因被告之供述而查獲其他正犯或共犯／所查獲之人與被告本案毒品來源無關') + '（' + P('卷頁') + '），被告之供述與查獲之間欠缺因果關係，自無毒品危害防制條例第17條第1項減輕或免除其刑規定之適用。');
-    if (o.f47aNo && isFraud) noRed.push('被告' + P('於偵查中否認犯行／於本院審理中始坦承犯行／雖於偵查及歷次審判中均自白，惟獲有犯罪所得新臺幣〇元而未自動繳交') + '，核與詐欺犯罪危害防制條例第47條前段減輕其刑之要件不符，自無該規定之適用。');
+    if (o.f47aNo && isFraud) noRed.push('被告' + P('於偵查中否認犯行／於本院審理中始坦承犯行／雖於偵查及歷次審判中均自白，惟獲有犯罪所得新臺幣〇元而未自動繳交') + '，核與詐欺犯罪危害防制條例' + P('修正前第47條前段／第47條第1項') + '減輕其刑之要件不符，自無該規定之適用。');
     if (o.f47bNo && isFraud) noRed.push('被告雖供出' + P('上手或共犯') + '，惟未因而扣押全部犯罪所得，或查獲發起、主持、操縱或指揮詐欺犯罪組織之人（' + P('卷頁') + '），自無詐欺犯罪危害防制條例第47條後段減輕或免除其刑規定之適用。');
     if (o.mlNo && isML) noRed.push('被告' + P('於偵查中否認一般洗錢犯行／有所得財物而未自動繳交全部所得財物') + '，核與洗錢防制法第23條第3項前段之要件不符，自無該規定之適用' + (rel === 'imag' && main && !/^洗/.test(main.e.k) ? '，於量刑時亦無從作為有利之考量' : '') + '。');
     if (o.org8No && crimes.some(function (c) { return /^組/.test(c.e.k); })) noRed.push('被告' + P('於偵查中否認參與犯罪組織／於審判中翻異否認') + '，未於偵查及歷次審判中均自白，自無組織犯罪防制條例第8條第1項後段減輕其刑規定之適用。');
@@ -3515,7 +3761,390 @@ var JudgmentCheck = (function () {
     return { text: L.join('\n'), notes: notes, ranges: ranges, crimes: crimes, unknown: parsed.unknown, mods: parsed.mods };
   }
 
-  return { analyze: analyze, parseNum: parseNum, crimes: CRIMES, calcRange: calcRange, fmtM: fmtM, lookupCrime: lookupCrime, crimeByCite: crimeByCite, parseStatutes: parseStatutes, buildDraft: buildDraft };
+  /* ===== 多數被告：分別產生各被告綱要後合併 ===== */
+  var CNUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
+  var HDR = { main: '　　　　主　　文', fact: '　　　　犯罪事實', factR: '　　　　事實及理由', reas: '　　　　理　　由' };
+  function splitDraft(text) {
+    var ls = text.split('\n'), d = { head: [], party: [], cause: '', main: [], factHdr: '', fact: [], reasHdr: '', reas: [], concl: '', tail: [], annex: [] }, st = 'head';
+    ls.forEach(function (l) {
+      if (st === 'head' && /^被　　　告/.test(l)) st = 'party';
+      if ((st === 'party' || st === 'head') && /^上列被告/.test(l)) { d.cause = l; st = 'cause'; return; }
+      if (l === HDR.main) { st = 'main'; return; }
+      if (l === HDR.fact) { d.factHdr = l; st = 'fact'; return; }
+      if (l === HDR.factR || l === HDR.reas) { d.reasHdr = l; st = 'reas'; return; }
+      if (/^據上論斷/.test(l)) { d.concl = l; st = 'tail'; return; }
+      if (l === '附錄本案論罪科刑法條全文') { st = 'annex'; return; }
+      if (st === 'cause') st = 'main';
+      d[st === 'head' ? 'head' : st].push(l);
+    });
+    return d;
+  }
+  var isHint = function (l) { return /^※/.test(l); };
+  function demote(l) {
+    var m;
+    if ((m = /^([一二三四五六七八九十]+)、/.exec(l))) return '（' + m[1] + '）' + l.slice(m[0].length);
+    if ((m = /^（([一二三四五六七八九十]+)）/.exec(l))) return '　' + (CNUM.indexOf(m[1]) + 1) + '、' + l.slice(m[0].length);
+    if ((m = /^(　*)(\d+)、/.exec(l)) && m[1].length <= 1) return m[1] + '　(' + m[2] + ')' + l.slice(m[0].length);
+    return l;
+  }
+  function parseReas(lines) {
+    var out = { pre: [], parts: [] }, major = '', cur = null;
+    lines.forEach(function (l) {
+      var mj = /^([壹貳參肆伍陸])、(.*)$/.exec(l), sc = /^([一二三四五六七八九十]+)、(.*)$/.exec(l);
+      if (mj) { major = mj[2]; cur = { major: major, key: '#', title: '', inline: '', lines: [], bare: true }; out.parts.push(cur); return; }
+      if (sc) {
+        var body = sc[2], ci = body.indexOf('：'), key = (ci > 0 && ci <= 24) ? body.slice(0, ci) : (body.length <= 24 && !/。/.test(body) ? body : body.slice(0, 12));
+        cur = { major: major, key: key, title: (ci > 0 && ci <= 24) ? body.slice(0, ci) : (body.length <= 24 && !/。/.test(body) ? body : ''), inline: (ci > 0 && ci <= 24) ? body.slice(ci + 1) : (body.length <= 24 && !/。/.test(body) ? '' : body), lines: [] };
+        out.parts.push(cur); return;
+      }
+      if (cur) cur.lines.push(l); else out.pre.push(l);
+    });
+    return out;
+  }
+  function buildDraftMulti(list) {
+    if (list.length <= 1) return buildDraft(list[0]);
+    var R = list.map(function (o) { return buildDraft(o); });
+    var D = R.map(function (r) { return splitDraft(r.text); });
+    var names = list.map(function (o, i) { return o.name || ('〔被告' + ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛'][i] + '〕'); });
+    var L = [], seenHint = {}, hintsOn = list[0].hints !== false;
+    function push(l) { if (isHint(l)) { if (!hintsOn || seenHint[l]) return; seenHint[l] = 1; } L.push(l); }
+    // 首部、當事人
+    D[0].head.forEach(push);
+    D.forEach(function (d) { d.party.forEach(function (l) { if (!isHint(l)) L.push(l); }); });
+    D.forEach(function (d) { d.party.filter(isHint).forEach(push); });
+    // 案由
+    var causes = [], order = D.map(function (d, i) { return i; }).sort(function (a, b) { var wa = Math.max.apply(null, [0].concat(R[a].crimes.map(function (c) { return weight(c.e); }))), wb = Math.max.apply(null, [0].concat(R[b].crimes.map(function (c) { return weight(c.e); }))); return wb - wa; });
+    order.forEach(function (i) { var m = /上列被告因(.+?)案件/.exec(D[i].cause); if (m) { var c = m[1].replace(/等$/, ''); if (causes.indexOf(c) < 0) causes.push(c); } });
+    var anyEtc = D.some(function (d) { return /上列被告因.+?等案件/.test(d.cause); });
+    L.push(D[0].cause.replace(/上列被告因.+?案件/, '上列被告因' + causes[0] + (causes.length > 1 || anyEtc ? '等' : '') + '案件'));
+    push('※多數被告：當事人欄依序列載各被告（各被告之辯護人列於該被告之後）；案由記載最重罪名，數罪加「等」，「上列被告」不加「等」。主文、事實、理由均依被告分項，共同犯罪部分宜合併記載。');
+    // 主文
+    L.push(HDR.main);
+    D.forEach(function (d, i) {
+      var c = d.main.filter(function (l) { return !isHint(l) && l.trim(); }).map(function (l) { return l.replace(/^[一二三四五六七八九]、/, ''); });
+      L.push(CNUM[i] + '、' + c.join(''));
+    });
+    D.forEach(function (d) { d.main.filter(isHint).forEach(push); });
+    push('※數被告之主文應分項記載各被告之罪刑及沒收；共同犯罪之犯罪所得應依各人實際分得數額分別宣告，分配不明者平均分擔（104年度第13次刑事庭會議）。');
+    // 事實
+    var hasFact = D.some(function (d) { return d.factHdr; });
+    if (hasFact) {
+      L.push(HDR.fact);
+      var fi = 0;
+      D.forEach(function (d, i) {
+        if (!d.factHdr) return;
+        var c = d.fact.filter(function (l) { return !isHint(l) && l.trim(); });
+        var numbered = c.some(function (l) { return /^[一二三四五六七八九十]+、/.test(l); });
+        if (numbered) { L.push(CNUM[fi] + '、' + names[i] + '部分：'); c.forEach(function (l) { L.push(demote(l)); }); }
+        else c.forEach(function (l, k) { L.push(k === 0 ? CNUM[fi] + '、' + l : l); });
+        fi++;
+      });
+      D.forEach(function (d) { d.fact.filter(isHint).forEach(push); });
+      push('※多數被告共同犯罪者，事實宜合併記載為「甲、乙與〇〇共同……」，毋庸逐一重複；本綱要依被告分列，請依實際共同關係整併。');
+    }
+    // 理由（依判決結果分組：有罪在前、無罪在後）
+    L.push(D.some(function (d) { return d.reasHdr === HDR.factR; }) ? HDR.factR : HDR.reas);
+    var conv = [], acq = [];
+    list.forEach(function (o, i) { (o.verdict === 'acq' ? acq : conv).push(i); });
+    var MJ = ['壹', '貳', '參', '肆', '伍', '陸', '柒'], mjN = 0;
+    function mergeGroup(idx, label) {
+      var P = idx.map(function (i) { return parseReas(D[i].reas); });
+      var majors = [], keys = {};
+      P.forEach(function (p, pi) { p.parts.forEach(function (s) { if (majors.indexOf(s.major) < 0) majors.push(s.major); var k = s.major + '|' + s.key; (keys[k] = keys[k] || { major: s.major, title: s.title, items: [] }).items.push({ who: idx[pi], s: s }); }); });
+      var keyOrder = []; P.forEach(function (p) { p.parts.forEach(function (s) { var k = s.major + '|' + s.key; if (keyOrder.indexOf(k) < 0) keyOrder.push(k); }); });
+      P.forEach(function (p) { p.pre.forEach(function (l) { if (isHint(l)) push(l); else if (L.indexOf(l) < 0) L.push(l); }); });
+      var useLabel = !!label && majors.length === 1 && majors[0] === '';
+      if (useLabel) L.push(MJ[mjN++] + '、' + label);
+      majors.forEach(function (mj) {
+        if (mj) L.push(MJ[mjN++] + '、' + mj);
+        var n = 0;
+        keyOrder.filter(function (k) { return keys[k].major === mj; }).forEach(function (k) {
+          var g = keys[k], bodies = g.items.map(function (it) { return (it.s.inline || '') + '\n' + it.s.lines.filter(function (l) { return !isHint(l); }).join('\n'); });
+          var same = g.items.length === idx.length && bodies.every(function (b) { return b === bodies[0]; });
+          if (g.items[0].s.bare) {
+            if (same) g.items[0].s.lines.forEach(push);
+            else g.items.forEach(function (it, j) { L.push('　　〔被告' + names[it.who] + '部分〕'); it.s.lines.forEach(function (l) { isHint(l) ? push(l) : L.push(l); }); });
+            return;
+          }
+          if (same) {
+            var s0 = g.items[0].s;
+            L.push(CNUM[n] + '、' + (s0.title ? s0.title + (s0.inline ? '：' + s0.inline : '') : s0.inline));
+            s0.lines.forEach(push);
+          } else {
+            L.push(CNUM[n] + '、' + (g.title || g.items[0].s.inline.slice(0, 12) + '〔…〕'));
+            g.items.forEach(function (it, j) {
+              L.push('（' + CNUM[j] + '）被告' + names[it.who] + '部分' + (it.s.title && it.s.inline ? '：' + it.s.inline : (it.s.title ? '：' : '：' + it.s.inline)));
+              it.s.lines.forEach(function (l) { if (isHint(l)) push(l); else L.push(demote(l)); });
+            });
+          }
+          g.items.forEach(function (it) { it.s.lines.filter(isHint).forEach(push); });
+          n++;
+        });
+      });
+    }
+    if (conv.length && acq.length) {
+      mergeGroup(conv, '有罪部分（被告' + conv.map(function (i) { return names[i]; }).join('、') + '）');
+      mergeGroup(acq, '無罪部分（被告' + acq.map(function (i) { return names[i]; }).join('、') + '）');
+      push('※有罪與無罪併存時，理由分「有罪部分」「無罪部分」敘述；無罪部分不記載事實、不說明證據能力。');
+    } else mergeGroup(conv.length ? conv : acq, '');
+    push('※各被告分項之說明中，「被告」宜改為「被告〇〇」以資區別；各被告共通之程序、證據說明可合併，避免重複。');
+    // 據上論斷
+    var segs = [];
+    D.forEach(function (d) { var m = /^據上論斷，應依(.+)，判決如主文。$/.exec(d.concl); if (m) m[1].split(/[，、]/).forEach(function (s) { if (s && segs.indexOf(s) < 0) segs.push(s); }); });
+    var grp = [];
+    segs.forEach(function (sg) { var m = /^(.*?(?:法|條例))(第.*)$/.exec(sg), law = m ? m[1] : '', part = m ? m[2] : sg; if (!m && grp.length) { grp[grp.length - 1].p.push(sg); return; } var g0 = grp.filter(function (g) { return g.law === law; })[0]; if (g0) { if (g0.p.indexOf(part) < 0) g0.p.push(part); } else grp.push({ law: law, p: [part] }); });
+    L.push(segs.length ? '據上論斷，應依' + grp.map(function (g) { return g.law + g.p.join('、'); }).join('，') + '，判決如主文。' : D[0].concl);
+    // 尾部
+    var tail = D[0].tail.slice(), ci = tail.findIndex(function (l) { return /書記官/.test(l); });
+    D.slice(1).forEach(function (d) { d.tail.forEach(function (l) { if (tail.indexOf(l) < 0 && !isHint(l)) tail.splice(ci < 0 ? tail.length : ci, 0, l); }); });
+    tail.forEach(push);
+    D.slice(1).forEach(function (d) { d.tail.filter(isHint).forEach(push); });
+    // 附錄
+    var annexBlocks = [], seenLaw = {};
+    D.forEach(function (d) { var cur = null; d.annex.forEach(function (l) {
+      if (/^[^\s，。；：]{2,24}第[\d]+條(之\d+)?$/.test(l)) { cur = { h: l, ls: [] }; if (!seenLaw[l]) { seenLaw[l] = 1; annexBlocks.push(cur); } return; }
+      if (isHint(l)) { push(l); return; }
+      if (cur) cur.ls.push(l);
+    }); });
+    if (annexBlocks.length) { L.push('附錄本案論罪科刑法條全文'); annexBlocks.forEach(function (b) { L.push(b.h); b.ls.forEach(function (l) { L.push(l); }); }); }
+    // notes / ranges
+    var nmap = {}, norder = [];
+    R.forEach(function (r, i) { r.notes.forEach(function (n) { var k = n.lv + '|' + n.t + '|' + n.d; if (!nmap[k]) { nmap[k] = { n: n, who: [] }; norder.push(k); } if (nmap[k].who.indexOf(names[i]) < 0) nmap[k].who.push(names[i]); }); });
+    var notes = norder.map(function (k) { var x = nmap[k]; return x.who.length < R.length ? { lv: x.n.lv, t: '〔' + x.who.join('、') + '〕' + x.n.t, d: x.n.d, ref: x.n.ref } : x.n; });
+    notes.unshift({ lv: 'info', t: '多數被告（' + names.join('、') + '）', d: '本綱要係就各被告分別產生後合併：主文依被告分項、事實依被告分列、理由相同部分合併而相異部分依被告分項。共同正犯之事實、證據及論罪說明，請依實際共同關係整併，並將各分項內之「被告」改為「被告〇〇」。', ref: '' });
+    var ranges = []; R.forEach(function (r, i) { r.ranges.forEach(function (rg) { var c = Object.assign({}, rg); c.name = names[i] + '：' + rg.name; ranges.push(c); }); });
+    var mods = {}; R.forEach(function (r) { Object.keys(r.mods).forEach(function (k) { mods[k] = r.mods[k]; }); });
+    return { text: L.join('\n'), notes: notes, ranges: ranges, crimes: [].concat.apply([], R.map(function (r) { return r.crimes; })), unknown: [].concat.apply([], R.map(function (r) { return r.unknown; })), mods: mods, multi: true };
+  }
+  /* ================= 量刑理由產生器（刑法第57條） =================
+     依據：刑法第57條；司法院「刑事案件量刑及定執行刑參考要點」（107.8.7）；
+     最高法院 113台上1057、112台上4686、113台上4575、114台上5994（重複評價）；
+     109台上3084、112台上168、113台上300、111台上2823（緘默權與犯後態度）；
+     111台上4339、110台上5396、112台上3150（認罪時點）；112台上4951（自首後坦承仍得列為犯後態度）；
+     113台上4304、114台上4550、114台上5777、115台上2330（想像競合輕罪減輕事由列為量刑因子）；
+     111台上977（輕罪併科罰金得不併科，應敘明）；112台上2660、111台上2804、110台上2774（§289Ⅱ科刑辯論與被害人意見）；
+     113台抗150、113台抗1083、112台抗1886、111台抗1014、113台上1134（定應執行刑之內外部界限）；112台抗1754（暫不定刑之旁論無拘束力） */
+  var ST_CAT = {
+    fraud: { label: '加重詐欺（車手／收水等）', motive: 'greed',
+      gen: '近年詐欺犯罪猖獗，嚴重破壞社會成員間之信賴關係，政府致力查緝防制',
+      means: '竟加入詐欺集團，與集團成員分工合作，以' + P('假投資') + '之詐術詐騙告訴人',
+      harm: '致告訴人受有新臺幣' + P('　') + '元之財產損害，並製造金流斷點，增加檢警查緝及被害人求償之困難',
+      roleNote: '其擔任' + P('車手／收水／取簿手') + '，負責' + P('依指示前往指定地點向被害人收取款項後轉交上手') + '，非居於主導或核心地位，參與程度' + P('較低／非輕') },
+    fraudAcct: { label: '幫助詐欺、洗錢（提供帳戶）', motive: 'greed',
+      gen: '',
+      means: '率爾將其申辦之' + P('金融帳戶資料') + '提供予他人使用，使詐欺集團得以隱匿真實身分及犯罪所得去向，助長詐欺犯罪',
+      harm: '致告訴人等' + P('　') + '人受有合計新臺幣' + P('　') + '元之損害，並增加被害人尋求救濟及檢警追查之困難',
+      roleNote: '惟其僅係提供帳戶之幫助犯，並未實際參與詐欺取財及洗錢之構成要件行為' },
+    drugSell: { label: '販賣毒品', motive: 'greed',
+      gen: '',
+      means: '明知毒品戕害國民身心健康，竟無視國家禁令，販賣第' + P('二') + '級毒品' + P('甲基安非他命') + '予' + P('購毒者'),
+      harm: '助長毒品流通，其販賣次數' + P('　') + '次、對象' + P('　') + '人、數量及所得' + P('新臺幣〇元') + '尚屬' + P('有限／非少') },
+    drugUse: { label: '施用毒品', motive: '',
+      gen: '',
+      means: '前經觀察、勒戒後，仍未能戒除毒癮，再犯施用第' + P('二') + '級毒品之罪',
+      harm: '施用毒品本質上係戕害自身健康之行為，對他人生命、身體、財產法益之直接侵害尚屬有限' },
+    theft: { label: '竊盜', motive: 'econ',
+      gen: '',
+      means: '不思以正當途徑獲取所需，竟恣意竊取他人財物，欠缺尊重他人財產權之觀念，其竊取手段' + P('係趁無人看管之際徒手竊取'),
+      harm: '竊得' + P('物品') + '，價值約新臺幣' + P('　') + '元，' + P('已發還告訴人／迄未返還') },
+    dui: { label: '不能安全駕駛（酒駕）', motive: '',
+      gen: '',
+      means: '明知酒後駕車對自身及其他用路人生命、身體、財產之危害，竟於飲酒後吐氣所含酒精濃度達每公升' + P('0.〇〇') + '毫克之狀態下，仍駕駛' + P('自用小客車') + '行駛於道路',
+      harm: P('所幸未肇事致生實害／並因而肇事致他人受傷') },
+    traffic: { label: '過失致死傷（交通事故）', motive: 'none', neg: true,
+      gen: '',
+      means: '駕駛' + P('自用小客車') + '，疏未注意' + P('車前狀況') + '，貿然' + P('行駛'),
+      harm: '致被害人受有' + P('傷勢') + '之傷害' },
+    injury: { label: '傷害', motive: 'emotion',
+      gen: '',
+      means: '不思理性處理糾紛，竟' + P('徒手毆打') + '告訴人',
+      harm: '致告訴人受有' + P('傷勢') + '之傷害，傷勢' + P('尚非嚴重／非輕') },
+    defam: { label: '妨害名譽', motive: 'emotion',
+      gen: '',
+      means: '不思以理性方式表達意見，竟於' + P('公開之臉書社團') + '，以' + P('言詞') + '辱罵／指摘告訴人',
+      harm: '貶損告訴人之人格及社會評價' },
+    sex: { label: '妨害性自主', motive: '',
+      gen: '',
+      means: '為滿足一己私慾，漠視被害人之性自主決定權，' + P('利用被害人酒醉之際'),
+      harm: '對被害人身心造成難以抹滅之創傷' },
+    dv: { label: '家庭暴力罪', motive: '',
+      gen: '',
+      means: '與告訴人為家庭暴力防治法所定之家庭成員，竟因' + P('細故') + '，' + P('行為'),
+      harm: '致告訴人受有' + P('傷勢') + '，漠視家庭成員間應相互尊重之義務' },
+    forge: { label: '偽造文書', motive: 'greed',
+      gen: '',
+      means: '偽造' + P('文書') + '並持以行使',
+      harm: '足生損害於' + P('名義人') + '及文書制度之公共信用' },
+    threat: { label: '恐嚇、強制', motive: 'emotion',
+      gen: '',
+      means: '以' + P('言詞') + '恐嚇告訴人',
+      harm: '致告訴人心生畏懼，影響其日常生活之安寧' },
+    order150: { label: '妨害秩序（§150）', motive: 'emotion',
+      gen: '',
+      means: '於' + P('時間、地點') + '，' + P('持球棒等物') + '下手實施強暴，其手段' + P('非輕'),
+      harm: '對在場公眾造成' + P('相當程度') + '之恐懼不安，危害社會安寧秩序' },
+    gun: { label: '槍砲彈藥', motive: '',
+      gen: '',
+      means: '無視政府禁令，非法持有' + P('非制式手槍〇支、子彈〇顆'),
+      harm: '對社會治安及他人生命、身體安全構成潛在危害，惟' + P('尚無證據證明有持以從事其他犯罪') },
+    generic: { label: '通用', motive: '',
+      gen: '', means: P('犯罪手段'), harm: P('犯罪所生之危險或損害') }
+  };
+  var ST_MOTIVE = { econ: '因' + P('缺錢花用／經濟拮据'), greed: '為貪圖' + P('不法報酬／輕易獲取金錢'), emotion: '因' + P('細故與告訴人發生爭執') + '，一時情緒失控', other: P('犯罪動機及目的'), none: '' };
+  var ST_REL = { stranger: '與告訴人素不相識', acquaint: '與告訴人為' + P('朋友') + '關係', family: '與告訴人為' + P('親屬') + '關係', partner: '與告訴人為' + P('男女朋友') + '關係', colleague: '與告訴人為同事關係', neighbor: '與告訴人為鄰居關係' };
+  function buildSentencing(o) {
+    o = o || {};
+    var C = ST_CAT[o.cat] || ST_CAT.generic, name = '被告', notes = [];
+    function note(lv, t, d, ref) { notes.push({ lv: lv, t: t, d: d, ref: ref || '' }); }
+    var page = function () { return o.pageRef === false ? '' : '（' + P('本院卷第〇頁') + '）'; };
+    var neg = !!C.neg || !!o.neg;
+    // ---------- 犯罪情狀（責任刑之基礎） ----------
+    var crime = [];
+    var mot = (o.motiveT || '').trim() || (o.motive && o.motive !== 'auto' ? (ST_MOTIVE[o.motive] || '') : (C.motive ? ST_MOTIVE[C.motive] : ''));
+    if (neg) mot = '';
+    var means = (o.meansT || '').trim() || C.means;
+    var gen = o.genOff ? '' : (C.gen || '');
+    var s1 = '被告' + (gen ? '明知' + gen + '，' : '') + (mot ? mot + '，' : '') + (gen || mot ? means : means.replace(/^竟/, ''));
+    crime.push(s1);
+    if (o.stim && o.stim !== 'none') crime.push(o.stim === 'provoke' ? '惟其犯罪係因告訴人' + P('先行挑釁／出言辱罵') + '所引發，所受刺激非輕' : o.stimT || P('犯罪時所受之刺激'));
+    var rel = (o.relT || '').trim() || ST_REL[o.rel] || '';
+    if (rel) crime.push(rel);
+    if (neg) crime.push(((o.dutyT || '').trim() || '且為本件事故之' + ({ main: '肇事主因', sole: '唯一肇事原因', sub: '肇事次因' }[o.duty] || P('肇事主因／次因'))) + (o.vfault ? '，被害人' + P('未注意車前狀況') + '亦與有過失' : ''));
+    if (C.roleNote && o.roleOn !== false) crime.push((o.roleT || '').trim() || C.roleNote);
+    var harm = (o.harmT || '').trim() || C.harm;
+    crime.push(harm);
+    if ((o.gain || '').trim()) crime.push('犯罪所得為新臺幣' + o.gain.trim() + '元');
+    // ---------- 行為人屬性 ----------
+    var person = [], rec = o.record || '';
+    var recTxt = {
+      none: '被告前無犯罪科刑紀錄，素行' + P('尚稱良好'),
+      prior: '被告前有' + P('〇〇') + '案件經法院判處罪刑確定之紀錄（檢察官未主張本案成立累犯），素行非佳',
+      recUsed: '被告構成累犯之前科，業經作為加重其刑之事由，爰不重複評價；' + P('除此之外，另有〇〇前科／無其他前科'),
+      recNotUsed: '被告雖構成累犯，惟本院認無依刑法第47條第1項加重其刑之必要，爰將其前科紀錄列為品行之量刑因子',
+      juv: '被告' + P('前無成年後之犯罪科刑紀錄') + '（少年時期之保護事件紀錄，不作為不利之量刑因子）'
+    }[rec];
+    if (recTxt) person.push(recTxt + (rec === 'recUsed' ? '' : '，有臺灣高等法院被告前案紀錄表在卷可稽'));
+    var edu = (o.edu || '').trim(), job = (o.job || '').trim(), fam = (o.fam || '').trim(), econ = o.econ || '';
+    var life = [];
+    life.push((edu || P('教育程度')) + '之智識程度');
+    life.push(job ? (/^(無業|待業|學生|家管|退休)$/.test(job) ? job : '從事' + job) : P('職業'));
+    life.push(fam || P('家庭狀況'));
+    life.push('家庭經濟狀況' + (econ ? { poor: '貧寒', tight: '勉持', ok: '小康', good: '富裕' }[econ] || econ : P('勉持')));
+    if ((o.health || '').trim()) life.push(o.health.trim());
+    person.push((person.length ? '其' : '被告') + '自陳' + life.join('、') + page() + '之生活狀況');
+    // ---------- 犯後態度 ----------
+    var after = [], plea = o.plea || '';
+    var pleaTxt = {
+      full: '被告犯後於偵查及本院審理中均坦承犯行',
+      trial: '被告於本院審理時坦承犯行',
+      late: '被告於偵查及本院準備程序中否認犯行，迄本院審理' + P('證據調查完畢') + '後始坦承犯行，雖仍節省部分司法資源，惟其認罪時點已晚，減讓幅度自應有所區別',
+      partial: '被告坦承' + P('客觀事實') + '，惟否認' + P('主觀犯意'),
+      deny: '被告否認犯行，未見悔意',
+      denyN: '被告否認犯行（此屬被告防禦權之行使，本院不執為從重量刑之依據）',
+      silent: '被告於本院審理時保持緘默（此屬被告防禦權之行使，本院不執為從重量刑之依據）'
+    }[plea];
+    if (pleaTxt) after.push(pleaTxt);
+    var amt = (o.compAmt || '').trim() ? '新臺幣' + o.compAmt.trim() + '元' : '新臺幣' + P('　') + '元';
+    var comp = {
+      paid: '並已與告訴人達成' + P('調解／和解') + '，賠償' + amt + '，業已履行完畢' + page(),
+      inst: '並已與告訴人達成調解，約定分期賠償' + amt + '，迄今已給付' + P('　') + '元' + page() + '，尚在履行中',
+      part: '已賠償告訴人部分損害' + amt + page(),
+      failAmt: '雖有意願與告訴人調解，惟因雙方就賠償金額之認知差距過大而未能成立' + page(),
+      failAbs: '雖表示有調解意願，惟告訴人' + P('未到庭') + '，致未能洽談' + page(),
+      noWill: '迄未與告訴人和解或賠償其損害',
+      returned: '所竊財物已' + P('發還告訴人') + '，犯罪所生損害已有減輕'
+    }[o.comp];
+    if (comp) after.push(comp);
+    if ((o.afterT || '').trim()) after.push(o.afterT.trim());
+    // ---------- 科刑意見 ----------
+    var views = [];
+    var vv = { forgive: '告訴人表示願意原諒被告', lenient: '告訴人表示請求從輕量刑', severe: '告訴人表示請求從重量刑', none: '告訴人未到庭陳述意見' }[o.victim];
+    if ((o.victimT || '').trim()) vv = '告訴人' + o.victimT.trim().replace(/^告訴人/, '');
+    var pros = (o.pros || '').trim(), dfn = (o.dfn || '').trim();
+    var opinionSent = '';
+    if (vv || pros || dfn) {
+      var op = [];
+      if (pros) op.push('檢察官' + pros.replace(/^檢察官/, ''));
+      if (dfn) op.push((o.hasDef ? '被告及辯護人' : '被告') + dfn.replace(/^(被告及辯護人|辯護人|被告)/, ''));
+      if (vv) op.push(vv);
+      opinionSent = op.join('，') + page();
+    }
+    // ---------- 想像競合輕罪 ----------
+    var light = [];
+    var LT = {
+      ml23: ['一般洗錢罪', '洗錢防制法第23條第3項前段'],
+      ml16: ['一般洗錢罪', '修正前洗錢防制法第16條第2項'],
+      org8: ['參與犯罪組織罪', '組織犯罪防制條例第8條第1項後段'],
+      f47: ['三人以上共同詐欺取財罪', '詐欺犯罪危害防制條例第47條' + P('前段／第1項')],
+      att: [P('輕罪罪名') + '未遂', '刑法第25條第2項']
+    };
+    (o.light || []).forEach(function (k) { var t = LT[k]; if (t) light.push(t); });
+    var lightSent = '';
+    if (light.length) {
+      lightSent = '又被告所犯' + light.map(function (t) { return t[0]; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).join('、') + '部分，' + (light.some(function (t) { return /自白|23條|16條|第8條|47條/.test(t[1]); }) ? '於偵查及歷次審判中均自白，' : '') + '原合於' + light.map(function (t) { return t[1]; }).join('、') + '減輕其刑之規定，雖因想像競合從一重論處而無從逕予減輕，仍於量刑時併予審酌';
+    }
+    var fineNo = '';
+    if (o.lightFineNo) fineNo = '另被告所犯' + P('一般洗錢罪') + '之輕罪雖有應併科罰金之規定，惟本院審酌被告' + P('參與程度、犯罪所得、經濟狀況') + '等情，經整體評價後，認所處之有期徒刑已足以充分評價其行為之不法及罪責內涵，爰不併予宣告輕罪之罰金刑';
+    // ---------- 結尾 ----------
+    var multi = +o.counts > 1;
+    var tail = (multi ? '分別量處如主文所示之刑' : '量處如主文所示之刑') + (o.sentence && o.sentence.trim() && !multi ? '（' + o.sentence.trim() + '）' : '');
+    var yk = o.yk ? '，並諭知易科罰金之折算標準' : '', fy = o.fineYk ? '，及罰金如易服勞役之折算標準' : '';
+    if (o.yk && o.ykNote) yk = '，並依刑法第41條第1項前段規定，諭知易科罰金之折算標準';
+    var L = [];
+    var intro = o.law ? '按刑罰之量定，屬法院自由裁量之職權行使，應以行為人之責任為基礎，審酌刑法第57條所列各款情狀，在法定刑度內酌量科刑，並應符合比例、平等及罪刑相當原則。' : '';
+    if (o.style === 'struct') {
+      L.push(intro + '爰以行為人之責任為基礎，審酌下列情狀：');
+      L.push('１、犯罪情狀：' + crime.join('；') + '。');
+      var pp = person.concat([]);
+      L.push('２、行為人屬性：' + pp.join('；') + '。');
+      var af = after.length ? after.join('，') : '';
+      L.push('３、犯後態度' + (opinionSent ? '及科刑意見' : '') + '：' + (af || P('犯後態度')) + (opinionSent ? '；' + opinionSent : '') + '。');
+      if (lightSent) L.push('４、' + lightSent + '。');
+      L.push((lightSent ? '５、' : '４、') + '綜合上開犯罪情狀及一般情狀等一切情狀，' + tail + yk + fy + '。' + (fineNo ? fineNo + '。' : ''));
+    } else {
+      var t = intro + '爰以行為人之責任為基礎，審酌' + crime.join('，') + '；兼衡' + person.join('，') + (after.length ? '；暨' + after.join('，') : '') + (opinionSent ? '，' + opinionSent : '') + (lightSent ? '；' + lightSent : '') + '等一切情狀，' + tail + yk + fy + '。' + (fineNo ? fineNo + '。' : '');
+      L.push(t);
+    }
+    // ---------- 定應執行刑 ----------
+    var A = [];
+    if (o.agg === 'set') {
+      var ag = o.aggSame === 'diff' ? '罪質不同，各罪獨立程度較高，責任非難重複程度較低' : '罪質' + P('相同') + '，犯罪手段、態樣相類，責任非難重複程度較高';
+      A.push('按數罪併罰之定應執行刑，係對犯罪行為人本身及所犯各罪之總檢視，應審酌各罪之犯罪類型、行為態樣、手段、動機、侵害法益種類、時間及空間之密接程度、責任非難重複程度，並考量刑罰邊際效應隨刑期而遞減、行為人所生痛苦隨刑期而遞增，及行為人復歸社會之可能性，為整體非難評價。爰審酌被告所犯' + P('〇') + '罪，' + ((o.aggT || '').trim() || '均係' + P('加入同一詐欺集團擔任車手') + '所為') + '，' + ag + '，犯罪時間' + ((o.aggSpan || '').trim() ? '集中於' + o.aggSpan.trim() : P('集中於〇年〇月間')) + '，' + (o.aggVictims === 'same' ? '侵害同一被害人之法益' : '侵害不同被害人之' + P('財產') + '法益') + '，兼衡被告' + P('就定應執行刑所表示之意見') + '等情，於各刑中之最長期以上、各刑合併之刑期以下，定其應執行之刑如主文所示' + (o.yk ? '，並諭知易科罰金之折算標準' : '') + '。');
+      note('info', '定應執行刑：外部性與內部性界限', '外部性界限為刑法第51條各款（最長期以上、合併刑期以下、有期徒刑不逾30年）；內部性界限為比例、公平、責罰相當及重複評價禁止。不得比附援引他案定刑比例（113台抗150、111台抗1014、113台抗514）。同罪質、時間密接者責任非難重複程度高，刑罰效果宜遞減（112台抗1886、113台上1134）。', '最高法院');
+      note('warn', '定應執行刑前應給予被告陳述意見之機會', '判決中定應執行刑者，宜於科刑辯論時一併詢問當事人就定應執行刑之意見並記明筆錄；易刑條件不同之數罪（§50Ⅰ但書）不得於判決中定應執行刑。', '刑法第50條第1項但書；刑事訴訟法第289條第2項');
+    } else if (o.agg === 'defer') {
+      A.push('被告所犯上開數罪，雖合於數罪併罰之要件，惟被告另有' + P('〇〇地方法院〇年度〇字第〇號') + '等案件' + P('尚在偵審中／已判決確定') + '，與本案所處之刑有合併定應執行刑之可能，為免重複定刑，並保障被告就定應執行刑表示意見之權利，爰不於本判決定其應執行之刑，俟被告所犯數罪全部確定後，由檢察官依法聲請法院裁定之。');
+      note('info', '暫不定應執行刑', '「待全部案件確定後再行定刑」源自最高法院裁定旁論之建議，並無拘束力；檢察官就未曾定刑之數罪聲請者，法院仍應依法裁定（112台抗1754）。已定刑確定之數罪，除另案確定等例外情形外，不得重複定刑（115台非41、113台非182）。', '最高法院112年度台抗字第1754號');
+    }
+    // ---------- 提示 ----------
+    if (rec === 'recUsed') note('warn', '累犯已加重，品行不得再以同一前科從重', '依累犯規定加重其刑後，量刑時泛稱「前科素行不佳」而未剔除構成累犯之前科，違反重複評價禁止（113台上1057，撤銷發回）。', '最高法院113年度台上字第1057號');
+    if (rec === 'prior') note('info', '檢察官未主張累犯：前科列入品行', '檢察官未主張或具體指出證明方法者，法院得將前科列為§57第5款品行之量刑因子（110台上大5660）。', '最高法院110年度台上大字第5660號');
+    if (rec === 'juv') note('info', '少年前案不得作為不利量刑因子', '少年保護事件或少年時期受刑之宣告執行完畢逾3年者視為未受宣告（少年事件處理法第83條之1），不得作為不利之量刑因子（109台非90）。', '研習④吳冠霆第18–20頁');
+    if (plea === 'deny') note('warn', '否認犯行不得作為從重量刑之唯一依據', '被告保持緘默或否認犯罪，屬防禦權之行使，若以此作為毫無悔意、態度不良之評價並資為量刑畸重之標準，為法所不許；但整體觀察並非僅以否認為加重理由者，尚非違法（109台上3084、112台上168、113台上300）。建議改用「否認犯行（此屬防禦權之行使，本院不執為從重量刑之依據），惟迄未賠償」等中性句型，或確保另有其他具體量刑事由。', '最高法院109年度台上字第3084號、112年度台上字第168號');
+    if (plea === 'late' || plea === 'trial') note('info', '認罪時點得作為刑度減讓之考量', '被告於何一訴訟階段認罪，攸關訴訟經濟及是否出於真誠悔意，得列為犯後態度是否減讓刑度之因子；案情明朗後始認罪者，減讓幅度得極微小（111台上4339、110台上5396、112台上3150）。', '最高法院111年度台上字第4339號');
+    if (o.selfUsed) note('info', '自首已減刑，仍得審酌自首後之具體表現', '自首減刑後，仍得以被告自首後坦承全部犯行、協助偵查等具體表現作為犯後態度之正向因子，非重複評價；惟不宜僅以「自首」本身再予從輕（112台上4951）。', '最高法院112年度台上字第4951號');
+    if (o.confRed) note('info', '自白已據以減刑者', '偵審自白已依特別法（毒品§17Ⅱ、詐欺條例§47、洗錢§23Ⅲ等）減輕其刑時，量刑段宜以悔悟之具體表現（如賠償、協助查獲）說明，避免僅以同一自白再次作為從輕依據，致評價失衡。', '重複評價禁止原則（量刑參考要點第3點）');
+    if (neg) note('info', '過失犯不審酌動機、目的', '過失犯無犯意問題，改審酌違反注意義務之程度、肇事責任比例及被害人與有過失（第8款）。提及被害人死亡、受傷結果係說明犯罪所生損害，非重複評價（112台上4686）。', '簡報①第268張；講義第67頁');
+    note('info', '構成要件事實不得重複評價', '量刑不得以構成要件事實本身作為從重理由（如過失致死罪不得以「致人於死」再予從重；三人以上共同詐欺不得以「三人以上」本身再予從重）。但犯罪手段、所生危險或損害之輕重程度，屬§57第3、9款之量刑情狀，非重複評價（114台上5994、114台上419、113台上4575）。', '刑事案件量刑及定執行刑參考要點第3點');
+    if (!vv) note('warn', '未記載告訴人／被害人之科刑意見', '科刑辯論前應予到場之告訴人、被害人或其家屬就科刑範圍表示意見之機會（刑事訴訟法第289條第2項）；已合法通知而未到庭者，不影響程序合法（112台上2660）。如有意見，宜於量刑理由中摘述。', '刑事訴訟法第289條第2項');
+    if (!pros && !dfn) note('info', '未記載檢察官及被告之科刑辯論意見', '科刑範圍應經檢察官、被告、辯護人依序辯論（刑事訴訟法第289條第2項；110台上2774）。量刑理由可摘述「檢察官具體求刑〇〇、辯護人請求從輕量刑」等意見。', '刑事訴訟法第289條第2項');
+    if (light.length) note('info', '想像競合輕罪之減輕事由列為量刑因子', '輕罪之減輕其刑規定，除涉及§55但書封鎖作用外，不影響處斷刑範圍，於量刑時併予審酌即可，評價即屬完足（113台上4304、114台上4550、114台上5777）；重罪已量處最低度刑者，無從再予更低度量刑（115台上2330）。', '最高法院113年度台上字第4304號');
+    if (o.lightFineNo) note('info', '輕罪罰金不併科應敘明理由', '刑法第55條但書之輕罪封鎖作用包含輕罪應併科之罰金；法院經整體評價後認所處徒刑已足以評價不法及罪責者，得裁量不併科，但應敘明理由（111台上977）。', '最高法院111年度台上字第977號');
+    if (o.cat === 'fraud' && !(o.light || []).length) note('info', '詐欺案件常見之輕罪量刑因子', '加重詐欺與一般洗錢、參與犯罪組織想像競合時，請確認洗錢防制法第23條第3項前段、組織犯罪防制條例第8條第1項後段之自白減刑是否列為量刑因子。', '');
+    if (o.cat === 'sex') note('warn', '性侵害案件應隱匿被害人身分', '量刑理由不得揭露足資識別被害人身分之資訊（性侵害犯罪防治法第15條）。', '性侵害犯罪防治法第15條');
+    if (o.cat === 'dui') note('info', '酒駕：酒測值超過門檻之程度得審酌', '吐氣酒精濃度達每公升0.25毫克為構成要件門檻，不得以「酒後駕車」本身從重；超過門檻之程度、行駛路段、時間、是否肇事，屬所生危險之程度，得列為量刑因子。', '重複評價禁止原則');
+    note('info', '司法院量刑資訊系統僅供參考', '量刑趨勢建議系統之統計數據，不得逕作為指摘量刑違法之依據（114台上419），亦不宜於判決中逕以系統數值作為量刑理由；個案不得比附援引他案量刑（113台上4575）。', '最高法院114年度台上字第419號');
+    if (o.agg && !(+o.counts > 1)) note('warn', '同罪次數為1，卻選擇定應執行刑', '定應執行刑以數罪併罰（刑法第50條）為前提，請確認罪數或改選「不適用」。', '刑法第50條、第51條');
+    if (o.prob === 'grant' && +o.counts > 1 && o.agg !== 'set') note('warn', '數罪宣告緩刑須先定應執行刑', '數罪併罰案件，除各罪宣告刑均在2年以下外，所定執行刑亦須未逾2年，始得宣告緩刑（110台上5396、114台上1874）。', '刑法第74條第1項');
+    // ---------- 緩刑 ----------
+    var PB = [];
+    if (o.prob === 'grant') PB.push('末查被告' + P('未曾因故意犯罪受有期徒刑以上刑之宣告') + '，有臺灣高等法院被告前案紀錄表在卷可稽，其因' + P('一時失慮') + '，致罹刑典，犯後坦承犯行，' + P('並已與告訴人達成調解、賠償損害，告訴人亦表示同意給予緩刑') + '，堪認被告經此偵審程序及科刑宣告之教訓後，當知所警惕，信無再犯之虞，本院認其所受刑之宣告以暫不執行為適當，爰依刑法第74條第1項第' + P('1') + '款規定，宣告緩刑' + P('2') + '年' + (o.probCond ? '，並依同條第2項第' + o.probCond + '款規定，命被告' + P('負擔內容') : '') + '，以啟自新。');
+    else if (o.prob === 'deny') PB.push('被告' + P('及辯護人') + '雖請求宣告緩刑，惟本院審酌' + P('被告犯罪之情節、所生損害、迄未賠償告訴人，及其他具體情狀') + '，認其所受刑之宣告尚不宜暫不執行，爰不予宣告緩刑。');
+    var text = L.join('\n') + (A.length ? '\n' + A.join('\n') : '') + (PB.length ? '\n' + PB.join('\n') : '');
+    return { text: text, notes: notes, parts: { main: L.join('\n'), agg: A.join('\n'), prob: PB.join('\n') } };
+  }
+
+  return { buildSentencing: buildSentencing, stCats: ST_CAT, analyze: analyze, parseNum: parseNum, crimes: CRIMES, calcRange: calcRange, fmtM: fmtM, lookupCrime: lookupCrime, crimeByCite: crimeByCite, parseStatutes: parseStatutes, buildDraft: buildDraft, buildDraftMulti: buildDraftMulti };
 })();
 /*ENGINE-END*/
 </script>
@@ -3763,7 +4392,7 @@ var JudgmentCheck = (function () {
     '<li>簡報②：刑事裁判書類寫作格式－刑罰加重減輕及處斷刑之計算（同上）</li>' +
     '<li>簡報③：刑事裁判書類寫作格式－裁判精簡及常見疏失（同上）</li>' +
     '<li>寫作要領：刑事裁判書類寫作要領（再版，司法官學院，吳冠霆主筆），含附件「司法院刑事裁判書類簡化原則」「裁判書類通俗化用語彙整表」</li>' +
-    '<li>法定刑表：全國法規資料庫現行條文（2026年9月核對）</li>' +
+    '<li>法定刑表：全國法規資料庫現行條文（2026年9月核對；詐欺犯罪危害防制條例§43–§47於2026年10月核對）</li>' +
     '<li>擬判Ⅰ／Ⅱ：司訓最後一哩路「刑事擬判參考資料Ⅰ（總則含沒收）」「刑事擬判參考資料Ⅱ（分則）」（105.06）</li>' +
     '<li>研習①：顧正德（司法院刑事廳）「近期刑事相關重要法制修正及實務」（115年刑事審判實務研討會，115.9.10）—聽審權與告知義務、審理範圍、處斷刑、少年、職權調查證據之界限</li>' +
     '<li>研習②：何信慶（臺北地院）「刑事沒收實務」（同研討會，115.9.8）</li>' +
@@ -3815,6 +4444,25 @@ var JudgmentCheck = (function () {
     '<li>以和解賠償為由酌減而未量化金額（114台上6067）；另有多件詐欺案件仍酌減（114上訴2649）</li>' +
     '<li>否准時僅以打擊詐欺集團必要性為由（111台上2668）；否准時未以遞減後最低度刑比較（115台上391）</li>' +
     '<li>撰稿綱要：勾選「酌減§59」且罪名為詐欺者，套用准許句型；「§59請求不准」可選一般否准或另有多案否准句型</li></ul>' +
+    '<h4>量刑理由頁面（刑法第57條；最高法院見解，2026-10）</h4><ul>' +
+    '<li>依§57十款分為犯罪情狀（第1、2、3、7、8、9款）與行為人屬性、犯後態度（第4、5、6、10款），可選一段式或分項式；§57對照表檢視各款是否已具體審酌</li>' +
+    '<li>重複評價：構成要件事實不得再作從重理由，但手段、損害輕重屬§57第3、9款情狀（114台上5994、113台上4575、112台上4686）；累犯已加重者，品行不得再泛稱前科素行（113台上1057）</li>' +
+    '<li>犯後態度：否認或緘默屬防禦權，不得作為量刑畸重之依據（109台上3084、112台上168、113台上300）；認罪時點得作為減讓幅度之考量（111台上4339、110台上5396）；自首減刑後仍得審酌自首後之坦承、協助偵查（112台上4951）</li>' +
+    '<li>想像競合輕罪之減輕事由移列量刑因子（113台上4304、114台上4550、114台上5777、115台上2330）；輕罪應併科罰金而不併科者應敘明（111台上977）</li>' +
+    '<li>科刑辯論與被害人意見（刑事訴訟法第289條第2項；110台上2774、112台上2660）；量刑資訊系統僅供參考（114台上419）</li>' +
+    '<li>定應執行刑：外部性界限（§51）與內部性界限，審酌罪質、時間密接、責任非難重複程度、邊際效應遞減（113台抗150、113台抗1083、112台抗1886、113台上1134）；暫不定刑係旁論建議，無拘束力（112台抗1754）</li></ul>' +
+    '<h4>詐欺犯罪危害防制條例§43、§44、§45與刑法§216論罪（高等法院見解，2026-10）</h4><ul>' +
+    '<li>修法：§43、§44、§47於115年1月21日修正公布、同月23日生效。§43門檻改為100萬元（3–10年）、1,000萬元（5–12年）、1億元（7年以上）；修正前為「獲取」財物達500萬元（3–10年）、1億元（5–12年）。§44Ⅰ增訂第3款；§47Ⅰ增設6個月內支付調（和）解全部金額之要件</li>' +
+    '<li>§43是§339-4的特別規定，優先適用，不另論§339-4（臺高院114上訴4669、臺南高分院115上訴126）。金額屬客觀處罰條件，不以行為人認識為必要（臺南高分院115上訴126）；中途加入者，僅就其參與部分合計（臺高院115上訴541）</li>' +
+    '<li>行為在115.1.23前：罪名記載「修正前詐欺犯罪危害防制條例第43條前段之三人以上共同詐欺取財且詐欺獲取之財物達500萬元罪」（臺高院115上訴909、115原上訴321）；未達500萬元者，不得依新法100萬元門檻論以§43（高雄高分院115上訴421）</li>' +
+    '<li>§44Ⅰ屬分則加重之獨立罪名（最高度、最低度同加½），主文記載「犯詐欺犯罪危害防制條例第44條第1項第1款之三人以上共同以網際網路對公眾散布而犯詐欺取財罪」，毋庸再贅述加重（臺中高分院114金上訴2501、1322）；被告須認識同條項第1、3、4款之事實，不知者僅論§339-4Ⅰ②（臺中高分院115金上訴214）</li>' +
+    '<li>§43與§44Ⅰ：構成要件部分重合，依想像競合從一重之§44Ⅰ處斷，並受§55但書封鎖（臺中高分院114金上訴2759）</li>' +
+    '<li>§44Ⅲ：「發起、主持、指揮犯罪組織而犯三人以上共同以網際網路對公眾散布詐欺取財罪」，引「第44條第3項、第1項第1款」（臺南高分院114金上訴2577）；§44Ⅳ：詐欺犯罪非屬第一審應行合議審判之案件</li>' +
+    '<li>§47新舊法：修正後增加要件，並改為「得減輕」，未較有利，行為在修正前者適用修正前§47前段。修正前所稱「犯罪所得」指被告個人實際所得，無所得者自白即可減輕（113台上大4096）</li>' +
+    '<li>§45：法人之代表人、法人或自然人之代理人、受僱人或其他從業人員因執行業務犯詐欺犯罪者，除處罰行為人外，並對該法人或自然人科以各該條之罰金（兩罰）；法人或自然人為被害人或已盡監督責任者，不在此限；主文例：「甲股份有限公司因其受僱人執行業務犯詐欺犯罪危害防制條例第44條第1項第1款之罪，科罰金新臺幣○元。」</li>' +
+    '<li>刑法§216：依所行使文書之性質連結§210–§215論罪，如「刑法第216條、第210條之行使偽造私文書罪」「第216條、第212條之行使偽造特種文書罪」「第216條、第213條之行使公務員登載不實公文書罪」「第216條、第214條之行使使公務員登載不實文書罪」「第216條、第215條之行使業務上登載不實文書罪」。偽造之低度行為為行使之高度行為所吸收；偽造印章、印文、署押為偽造文書之階段行為</li>' +
+    '<li>檢核：詐欺條例新舊法比較、新法後仍引「修正前」、新法後§47仍以自動繳交為要件、§43門檻金額與行為時不符、§43未標段別、§43／§44與§339-4並論、§43與§44未說明想像競合、§216未說明吸收、僅記載「第216條之罪」</li>' +
+    '<li>撰稿綱要：「加入罪名」選單新增「組合條文（依高等法院論罪方式）」，可一鍵帶入§216＋§210／§211／§212／§213／§214／§215、§43前段／中段／後段、§44Ⅰ各款、§44Ⅲ、§45；目前尚無高院就新法§43中段、§44Ⅰ③之論罪先例，句型係依條文擬定</li></ul>' +
     '<h4>詐欺車手收據／工作證沒收說理（判決研究，2026-09）</h4><ul>' +
     '<li>未扣案收據等文書不予沒收之標準說理應同時具備四要素：①紙張本身無價值、僅著重表彰之意義；②對罪責評價無影響；③相較開啟執行程序之公益資源不符比例；④欠缺刑法上重要性，並引刑法第38條之2第2項（113年度金上訴字第1500號、114年度金上訴字第548、549號）</li>' +
     '<li>偽造私文書全紙已沒收者，其上偽造印文無庸重複宣告沒收，以免重複宣告同一標的（113年度金上訴字第1500號附表編號4）</li>' +
@@ -3865,6 +4513,7 @@ var JudgmentCheck = (function () {
     '<li>加重減輕事由逐項選擇「減輕」或「不減」：累犯（加重／構成累犯但不加重）、自首、§59（酌減／兩種否准句型）、未遂、幫助犯、毒品§17Ⅰ與Ⅱ、詐欺條例§47前後段、洗錢§23Ⅲ、組織條例§8；選「不減」會產生不予減輕之說明句型，且不計入處斷刑</li>' +
     '<li>擬判參考資料整合：無罪判決綱要、程序轉換案由（簡易改通常、簡易→通常→簡式）、證據能力11種爭執類型例稿、否認案件9種論證模組、各罪罪數吸收與法條競合句型、接續犯／繼續犯／集合犯／同種想像競合、新舊法比較三種結論、§18Ⅱ、§19Ⅱ、§31Ⅰ、車禍自首、第三人沒收與不沒收說明、不另為免訴或不受理；新增放火、妨害公眾往來安全、略誘和誘、遺棄、準強盜與強盜結合犯、重利、擄人勒贖、干擾電腦、戶籍法、商業會計法、走私、製造販賣槍彈、貪污收賄、選罷法賄選、森林法、水保法、妨害國幣等罪名之法定刑、主文、事實句型及附錄條文</li>' +
     '<li>研習①–④整合：緩刑支付負擔改為主文具體諭知金額、期限及分期方式；「撰寫提醒」固定列出宣判前確認事項（被告生存、同一案件、累犯執畢日、簡易刑度、告知義務、告訴與時效、緩刑負擔、保安處分對象、§50但書、最低度刑）；累犯、前科、變更起訴法條、移送併辦、不另為無罪、否認案件、未選任辯護人之傳聞同意等段落加入對應提示；新增§150Ⅱ相對加重句型、共犯犯罪所得平均分擔沒收選項、和解部分履行之沒收句型、無罪判決單獨宣告沒收（違禁物、毒品、偽造印文署押）；工具沒收與不能安全駕駛、簡易程序、少年褫奪公權之錯誤提醒</li>' +
+    '<li>多數被告：於「被告」區新增或複製被告，各被告分別設定姓名、論罪法條、判決類型（有罪／無罪）、參與形態、加減事由、緩刑、褫奪公權與沒收（標示「個別」者），法院、程序、證據能力等全案共用；產生時依被告分項合併主文、事實與理由（相同部分合併、相異部分以「被告〇〇部分」分項），有罪與無罪併存者理由另立「無罪部分」，據上論斷及附錄法條合併去重，處斷刑依被告分列</li>' +
     '<li>〔　〕為待填欄位，「※」行為寫作提示；「送入檢核」會移除提示並執行檢核，未填欄位將被列為例稿殘留</li></ul>' +
     '<div class="note">本工具為規則式形式檢核，依文字樣式比對，不理解實體內容；標示「注意」「提示」者可能為誤報，請以卷證及法律判斷為準。處斷刑加減事由係由理由文字推斷，僅在能對應法定刑表時試算。規則寫在本檔案的 &lt;script&gt; 中（TYPOS、LOGIC_RULES、CRIMES 等），可自行增修。</div></div>';
 
@@ -3931,13 +4580,14 @@ var JudgmentCheck = (function () {
   function toast(msg) { var t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(function () { t.classList.remove('on'); }, 1800); }
   function setAppMode(m) {
     document.body.dataset.app = m;
-    $('#appChk').classList.toggle('on', m === 'chk'); $('#appDr').classList.toggle('on', m === 'dr');
-    $('#chkMain').hidden = m !== 'chk'; $('#drMain').hidden = m !== 'dr';
+    $('#appChk').classList.toggle('on', m === 'chk'); $('#appDr').classList.toggle('on', m === 'dr'); $('#appSt').classList.toggle('on', m === 'st');
+    $('#chkMain').hidden = m !== 'chk'; $('#drMain').hidden = m !== 'dr'; $('#stMain').hidden = m !== 'st';
     document.querySelectorAll('.chkOnly').forEach(function (b) { b.hidden = m !== 'chk'; });
     document.querySelectorAll('.drOnly').forEach(function (b) { b.hidden = m !== 'dr'; });
   }
   $('#appChk').onclick = function () { setAppMode('chk'); };
   $('#appDr').onclick = function () { setAppMode('dr'); };
+  $('#appSt').onclick = function () { setAppMode('st'); };
 
   // 罪名選單
   (function () {
@@ -3945,13 +4595,21 @@ var JudgmentCheck = (function () {
     JudgmentCheck.crimes.forEach(function (c) { if (!c.old) (grp[c.law] = grp[c.law] || []).push(c); });
     $('#dPick').innerHTML = '<option value="">＋自清單加入罪名…</option>' + Object.keys(grp).map(function (law) {
       return '<optgroup label="' + esc(law) + '">' + grp[law].map(function (c) { return '<option value="' + esc(c.n.replace(/^[^§]*§/, '')) + '|' + esc(c.law) + '">' + esc(c.n.replace(/^[^§]*§/, '§')) + '</option>'; }).join('') + '</optgroup>';
-    }).join('');
+    }).join('') + '<optgroup label="組合條文（依高等法院論罪方式）">' + [
+      ['刑法第216條、第210條', '§216、§210 行使偽造私文書'], ['刑法第216條、第211條', '§216、§211 行使偽造公文書'], ['刑法第216條、第212條', '§216、§212 行使偽造特種文書'],
+      ['刑法第216條、第213條', '§216、§213 行使公務員登載不實公文書'], ['刑法第216條、第214條', '§216、§214 行使使公務員登載不實文書'], ['刑法第216條、第215條', '§216、§215 行使業務上登載不實文書'],
+      ['詐欺犯罪危害防制條例第43條前段', '詐欺條例§43前段 使人交付財物達100萬元（修正前：獲取達500萬元）'], ['詐欺犯罪危害防制條例第43條中段', '詐欺條例§43中段 達1,000萬元（115.1.23生效）'], ['詐欺犯罪危害防制條例第43條後段', '詐欺條例§43後段 達1億元（115.1.23生效）'],
+      ['刑法第339條之4第1項第2款、第3款、詐欺犯罪危害防制條例第44條第1項第1款', '詐欺條例§44Ⅰ① ＋§339-4Ⅰ②③ 網際網路對公眾散布'], ['刑法第339條之4第1項第1款、第2款、詐欺犯罪危害防制條例第44條第1項第1款', '詐欺條例§44Ⅰ① ＋§339-4Ⅰ①② 冒用公務員名義'],
+      ['刑法第339條之4第1項第2款、詐欺犯罪危害防制條例第44條第1項第2款', '詐欺條例§44Ⅰ② 境外設備對境內之人'], ['刑法第339條之4第1項第2款、詐欺犯罪危害防制條例第44條第1項第3款', '詐欺條例§44Ⅰ③ 利用／與未滿18歲、滿80歲、非本國籍人士（115.1.23生效）'],
+      ['詐欺犯罪危害防制條例第44條第3項、刑法第339條之4第1項第2款、第3款', '詐欺條例§44Ⅲ 發起主持操縱指揮犯罪組織而犯'], ['詐欺犯罪危害防制條例第45條', '詐欺條例§45 法人兩罰（提示）']
+    ].map(function (x) { return '<option value="RAW|' + esc(x[0]) + '">' + esc(x[1]) + '</option>'; }).join('') + '</optgroup>';
   })();
   $('#dPick').onchange = function () {
     var v = this.value; if (!v) return;
+    if (/^RAW\|/.test(v)) { var ta0 = $('#dStat'); ta0.value = (ta0.value.trim() ? ta0.value.trim() + '、' : '') + v.slice(4); this.value = ''; preview(); ta0.dispatchEvent(new Event('change')); return; }
     var parts = v.split('|'), s = parts[0].split(' ')[0], law = parts[1];
     var m = s.match(/^([\d-]+)([ⅠⅡⅢⅣⅤⅥ]?)/), art = m[1].split('-'), txt = (law === '刑法' ? '刑法' : law) + '第' + art[0] + '條' + (art[1] ? '之' + art[1] : '') + (m[2] ? '第' + ({ 'Ⅰ': 1, 'Ⅱ': 2, 'Ⅲ': 3, 'Ⅳ': 4, 'Ⅴ': 5, 'Ⅵ': 6 }[m[2]]) + '項' : '');
-    if (/前段/.test(s)) txt += '前段'; if (/後段/.test(s)) txt += '後段';
+    if (/前段/.test(s)) txt += '前段'; if (/中段/.test(s)) txt += '中段'; if (/後段/.test(s)) txt += '後段';
     var ta = $('#dStat'); ta.value = (ta.value.trim() ? ta.value.trim() + '、' : '') + txt; this.value = ''; preview();
   };
   function opts() {
@@ -3977,15 +4635,69 @@ var JudgmentCheck = (function () {
     if (!o.statutes.trim()) { $('#dParsed').innerHTML = '<span class="basis">輸入法條後即時辨識</span>'; return; }
     var r = JudgmentCheck.buildDraft(o);
     var chips = r.crimes.map(function (c) { return '<span class="chip ok">' + esc(c.e.n.replace(/^[^§]*§/, '§')) + (c.s.kuan && c.s.kuan.length ? '第' + c.s.kuan.join('、') + '款' : '') + '</span>'; });
-    Object.keys(r.mods).forEach(function (k) { chips.push('<span class="chip mod">' + esc({ att: '未遂§25', co: '共同正犯§28', inst: '教唆§29', help: '幫助§30', rec: '累犯§47', imag: '想像競合§55', r59: '§59', self: '自首§62', sp134: '§134', oldnew: '新舊法§2', k112: '兒少法§112', sp44: '詐欺條例§44', f47a: '詐欺條例§47前段', f47b: '詐欺條例§47後段', d17a: '毒品§17Ⅰ', d17b: '毒品§17Ⅱ', sp9: '毒品§9', ml: '洗錢自白減輕', org8: '組織§8', sp86: '道交§86', sp150: '§150Ⅱ', speedy: '速審§7', r18: '§18', r19: '§19Ⅱ', r31: '無身分共犯§31Ⅰ', r26: '§26', r27: '§27', r16: '§16但書', r20: '§20', r23: '§23但書', r24: '§24但書', r154: '§154Ⅱ', r166: '§166', r172: '§172', r2271: '§227-1', r347: '§347Ⅴ', sp286: '§286Ⅲ', sp3: '加重至⅓（§116）', gun18: '槍砲§18', gun18b: '槍砲§18Ⅳ後段', org8a: '組織§8前段', spBank: '銀行法§125-2Ⅱ', spForest: '森林法§51Ⅲ', f46: '詐欺條例§46', mlb: '洗錢§23Ⅱ／Ⅲ後段' }[k] || k) + '</span>'); });
+    Object.keys(r.mods).forEach(function (k) { chips.push('<span class="chip mod">' + esc({ att: '未遂§25', co: '共同正犯§28', inst: '教唆§29', help: '幫助§30', rec: '累犯§47', imag: '想像競合§55', r59: '§59', self: '自首§62', sp134: '§134', oldnew: '新舊法§2', k112: '兒少法§112', sp44: '詐欺條例§44', f47a: '詐欺條例§47前段', f47b: '詐欺條例§47後段', d17a: '毒品§17Ⅰ', d17b: '毒品§17Ⅱ', sp9: '毒品§9', ml: '洗錢自白減輕', org8: '組織§8', sp86: '道交§86', sp150: '§150Ⅱ', speedy: '速審§7', r18: '§18', r19: '§19Ⅱ', r31: '無身分共犯§31Ⅰ', r26: '§26', r27: '§27', r16: '§16但書', r20: '§20', r23: '§23但書', r24: '§24但書', r154: '§154Ⅱ', r166: '§166', r172: '§172', r2271: '§227-1', r347: '§347Ⅴ', sp286: '§286Ⅲ', sp3: '加重至⅓（§116）', gun18: '槍砲§18', gun18b: '槍砲§18Ⅳ後段', org8a: '組織§8前段', spBank: '銀行法§125-2Ⅱ', spForest: '森林法§51Ⅲ', f46: '詐欺條例§46', mlb: '洗錢§23Ⅱ／Ⅲ後段', f45: '詐欺條例§45兩罰' }[k] || k) + '</span>'); });
     r.unknown.forEach(function (s) { chips.push('<span class="chip bad">未收錄：' + esc(s.law + '§' + s.art + (s.sub ? '-' + s.sub : '')) + '</span>'); });
     $('#dParsed').innerHTML = chips.join('') || '<span class="basis">未辨識出法條</span>';
     $('#relRow').hidden = r.crimes.length < 2;
   }
+
+  /* ===== 多數被告 ===== */
+  var PER = ['dStat', 'dName', 'dSex', 'dDef', 'dCustody', 'dVerdict', 'dPlea', 'dRole', 'dCounts', 'dRel', 'dAtt', 'dAddFine', 'dKind', 'fRec', 'fPrior', 'fSelf', 'fR59', 'fR18', 'fR19', 'f31', 'fSp134', 'fK112', 'fD17b', 'fD17a', 'fF47a', 'fF47b', 'fSp44', 'fMl', 'fOrg8', 'dProb', 'dProbC', 'dProbDeny', 'dProbDenyType', 'dDep', 'dRet'];
+  var GAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+  function snapDef() { var o = {}; PER.forEach(function (id) { var el = document.getElementById(id); if (el) o[id] = el.type === 'checkbox' ? el.checked : el.value; }); o.conf = Array.prototype.filter.call(document.querySelectorAll('[data-conf]'), function (x) { return x.checked; }).map(function (x) { return x.dataset.conf; }); return o; }
+  function loadDef(o) {
+    PER.forEach(function (id) { var el = document.getElementById(id); if (!el || !(id in o)) return; if (el.type === 'checkbox') el.checked = !!o[id]; else el.value = o[id]; });
+    document.querySelectorAll('[data-conf]').forEach(function (x) { x.checked = (o.conf || []).indexOf(x.dataset.conf) >= 0; });
+    $('#probRow').hidden = !$('#dProb').checked; $('#probDenyRow').hidden = !$('#dProbDeny').checked;
+  }
+  var BLANK = snapDef(), defs = [snapDef()], curDef = 0;
+  function defLabel(d, i) { return (d.dName && d.dName.trim()) || ('被告' + GAN[i]); }
+  function renderDefs() {
+    defs[curDef] = snapDef();
+    var multi = defs.length > 1;
+    document.body.toggleAttribute('data-multi', multi);
+    $('#dDefHint').hidden = !multi;
+    $('#dDefs').innerHTML = defs.map(function (d, i) {
+      var n = (d.dStat || '').split(/[、，,;；\n]/).filter(function (x) { return x.trim(); }).length;
+      return '<div class="deftab' + (i === curDef ? ' on' : '') + '" role="tab" aria-selected="' + (i === curDef) + '"><button type="button" class="dt-go" data-def="' + i + '"><span class="dt-av">' + GAN[i] + '</span><span class="dt-tx"><b>' + esc(defLabel(d, i)) + '</b><small>' + (d.dVerdict === 'acq' ? '無罪' : (n ? n + ' 項法條' : '尚未輸入法條')) + '</small></span></button>' +
+        (multi ? '<button type="button" class="dt-x" data-defx="' + i + '" title="移除此被告" aria-label="移除' + esc(defLabel(d, i)) + '">×</button>' : '') + '</div>';
+    }).join('') + (defs.length < GAN.length ? '<button type="button" class="deftab-add" id="dDefAdd" title="新增空白被告">＋ 新增被告</button><button type="button" class="deftab-add ghost" id="dDefDup" title="複製目前被告之罪名與設定（姓名清空），適用共同正犯">⧉ 複製目前被告</button>' : '');
+  }
+  function defSub(d) { var n = (d.dStat || '').split(/[、，,;；\n]/).filter(function (x) { return x.trim(); }).length; return d.dVerdict === 'acq' ? '無罪' : (n ? n + ' 項法條' : '尚未輸入法條'); }
+  function refreshDefLabel() {
+    defs[curDef] = snapDef();
+    var tab = document.querySelectorAll('#dDefs .deftab')[curDef]; if (!tab) return renderDefs();
+    tab.querySelector('.dt-tx b').textContent = defLabel(defs[curDef], curDef); tab.querySelector('.dt-tx small').textContent = defSub(defs[curDef]);
+  }
+  function switchDef(i) { defs[curDef] = snapDef(); curDef = i; loadDef(defs[i]); renderDefs(); preview(); }
+  $('#dDefs').addEventListener('click', function (e) {
+    var go = e.target.closest('[data-def]'), x = e.target.closest('[data-defx]');
+    if (x) { var k = +x.dataset.defx; defs[curDef] = snapDef(); defs.splice(k, 1); curDef = Math.max(0, Math.min(curDef > k ? curDef - 1 : curDef, defs.length - 1)); loadDef(defs[curDef]); renderDefs(); preview(); return; }
+    if (go) { switchDef(+go.dataset.def); return; }
+    if (e.target.id === 'dDefAdd' || e.target.id === 'dDefDup') {
+      defs[curDef] = snapDef();
+      var nd = e.target.id === 'dDefDup' ? Object.assign({}, defs[curDef], { dName: '', fRec: '', fPrior: false, fSelf: '', fR59: '', fR18: '', fR19: '' }) : Object.assign({}, BLANK);
+      defs.push(nd); switchDef(defs.length - 1); $('#dName').focus();
+    }
+  });
+  ['input', 'change'].forEach(function (ev) { ['dName', 'dStat', 'dVerdict'].forEach(function (id) { $('#' + id).addEventListener(ev, refreshDefLabel); }); });
+  PER.forEach(function (id) { var el = document.getElementById(id); var lb = el && el.closest('label'); if (lb) lb.classList.add('perdef'); });
+  document.querySelectorAll('[data-conf]').forEach(function (x) { var lb = x.closest('label'); if (lb) lb.classList.add('perdef'); });
+  ['dStat'].forEach(function (id) { var fg = document.getElementById(id).closest('.fg'); if (fg) fg.querySelector('.fl').classList.add('perdef'); });
+  function collectAll() {
+    defs[curDef] = snapDef();
+    if (defs.length === 1) return [opts()];
+    var list = defs.map(function (d) { loadDef(d); return opts(); });
+    loadDef(defs[curDef]);
+    return list;
+  }
+  renderDefs();
   function gen() {
-    var o = opts();
-    if (!o.statutes.trim()) { toast('請先輸入法條'); $('#dStat').focus(); return; }
-    last = JudgmentCheck.buildDraft(o);
+    var list = collectAll(), emptyAt = -1;
+    list.forEach(function (o, i) { if (emptyAt < 0 && !o.statutes.trim()) emptyAt = i; });
+    if (emptyAt >= 0) { if (emptyAt !== curDef) switchDef(emptyAt); toast(list.length > 1 ? '請先輸入「' + defLabel(defs[emptyAt], emptyAt) + '」之法條' : '請先輸入法條'); $('#dStat').focus(); return; }
+    last = list.length > 1 ? JudgmentCheck.buildDraftMulti(list) : JudgmentCheck.buildDraft(list[0]);
+    renderDefs();
     $('#dOut').value = last.text;
     $('#dCount').textContent = (last.text.match(/〔/g) || []).length + ' 個待填欄位';
     ['#dCopy', '#dDown', '#dToChk'].forEach(function (s) { $(s).disabled = false; });
@@ -4026,6 +4738,156 @@ var JudgmentCheck = (function () {
     $('#dRole').value = 'co'; $('#dRel').value = 'imag'; $('#dPlea').value = 'confess'; $('#fF47a').value = ''; $('#fMl').value = 'y'; $('#fOrg8').value = 'y';
     document.querySelector('[data-conf=proceedsU]').checked = true; preview(); gen();
   };
+  /* ===== 量刑理由 ===== */
+  (function () {
+    var CATS = JudgmentCheck.stCats, sLast = null, stab = 'text';
+    var sv = function (id) { var el = document.getElementById(id); return el ? (el.type === 'checkbox' ? el.checked : el.value) : ''; };
+    $('#sCat').innerHTML = Object.keys(CATS).map(function (k) { return '<option value="' + k + '">' + esc(CATS[k].label) + '</option>'; }).join('');
+    // 依案件類型預填手段、角色、損害（使用者已修改者不覆蓋）
+    function fillDefaults(force) {
+      var C = CATS[sv('sCat')] || CATS.generic;
+      document.querySelectorAll('#stForm textarea[data-def]').forEach(function (ta) {
+        var d = C[ta.dataset.def] || '';
+        if (force || !ta.value.trim() || ta.dataset.auto === '1') { ta.value = d; ta.dataset.auto = '1'; ta.classList.add('dflt'); }
+      });
+      $('#sRoleRow').hidden = !C.roleNote;
+      $('#sNegRow').hidden = !C.neg;
+      $('#sGen').closest('label').hidden = !C.gen;
+    }
+    document.querySelectorAll('#stForm textarea[data-def]').forEach(function (ta) { ta.addEventListener('input', function () { ta.dataset.auto = '0'; ta.classList.remove('dflt'); }); });
+    $('#sCat').addEventListener('change', function () { fillDefaults(false); });
+    function sOpts() {
+      return {
+        cat: sv('sCat'), counts: sv('sCounts'), style: sv('sStyle'), sentence: sv('sSent'), law: sv('sLaw'), pageRef: sv('sPage'), yk: sv('sYk'), fineYk: sv('sFineYk'),
+        motive: sv('sMot'), motiveT: sv('sMotT'), stim: sv('sStim'), rel: sv('sRel'), gain: sv('sGain'),
+        meansT: sv('sMeans'), roleT: sv('sRole'), roleOn: !$('#sRoleRow').hidden, duty: sv('sDuty'), vfault: sv('sVfault'), harmT: sv('sHarm'), genOff: !sv('sGen'),
+        record: sv('sRec'), edu: sv('sEdu'), job: sv('sJob'), econ: sv('sEcon'), fam: sv('sFam'), health: sv('sHealth'),
+        plea: sv('sPlea'), comp: sv('sComp'), compAmt: sv('sAmt'), afterT: sv('sAfter'),
+        victim: sv('sVictim'), victimT: sv('sVictimT'), pros: sv('sPros'), dfn: sv('sDfn'), hasDef: sv('sHasDef'),
+        light: Array.prototype.filter.call(document.querySelectorAll('[data-light]'), function (x) { return x.checked; }).map(function (x) { return x.dataset.light; }),
+        lightFineNo: sv('sFineNo'), selfUsed: sv('sSelf'), confRed: sv('sConf'),
+        agg: sv('sAgg'), aggSame: sv('sAggSame'), aggVictims: sv('sAggVic'), aggSpan: sv('sAggSpan'), aggT: sv('sAggT'),
+        prob: sv('sProb'), probCond: sv('sProbC')
+      };
+    }
+    function catOf(k, role) {
+      if (!k) return 'generic';
+      if (/^339-4$|^詐4/.test(k)) return role === 'help' ? 'fraudAcct' : 'fraud';
+      if (/^339$|^洗/.test(k)) return role === 'help' ? 'fraudAcct' : 'fraud';
+      if (/^毒(4|5|8)/.test(k)) return 'drugSell';
+      if (/^毒(10|11)/.test(k)) return 'drugUse';
+      if (/^32[01]$/.test(k)) return 'theft';
+      if (/^185-3/.test(k)) return 'dui';
+      if (/^(276|284)/.test(k)) return 'traffic';
+      if (/^277|^278/.test(k)) return 'injury';
+      if (/^(309|310)/.test(k)) return 'defam';
+      if (/^22[1-9]/.test(k)) return 'sex';
+      if (/^家暴/.test(k)) return 'dv';
+      if (/^21[0-7]$/.test(k)) return 'forge';
+      if (/^(304|305|346)$/.test(k)) return 'threat';
+      if (/^150/.test(k)) return 'order150';
+      if (/^槍/.test(k)) return 'gun';
+      return 'generic';
+    }
+    var setv = function (id, v) { var el = document.getElementById(id); if (!el) return; if (el.type === 'checkbox') el.checked = !!v; else el.value = v; };
+    $('#sImport').onclick = function () {
+      var o = opts();
+      if (!o.statutes.trim()) { toast('撰稿綱要尚未輸入法條'); return; }
+      var r = JudgmentCheck.buildDraft(o), rg = r.ranges || [];
+      var main = rg.length ? rg.slice().sort(function (a, b) { return (b.R.maxStat || 0) - (a.R.maxStat || 0); })[0] : null;
+      var k = main ? main.c.e.k : (r.crimes[0] && r.crimes[0].e.k);
+      setv('sCat', catOf(k, o.role)); fillDefaults(false);
+      setv('sCounts', o.rel === 'many' && r.crimes.length > 1 ? r.crimes.length : (o.counts || 1));
+      setv('sPlea', o.plea === 'deny' ? 'denyN' : 'full');
+      setv('sRec', o.rec ? 'recUsed' : o.recNo ? 'recNotUsed' : o.prior ? 'prior' : '');
+      setv('sSelf', o.self); setv('sConf', o.d17b || o.f47a || (o.ml && !(r.mods && r.mods.imag)));
+      setv('sHasDef', !!o.defense);
+      var imag = o.rel === 'imag' && r.crimes.length > 1;
+      document.querySelectorAll('[data-light]').forEach(function (x) { x.checked = false; });
+      if (imag) {
+        var ks = r.crimes.map(function (c) { return c.e.k; });
+        if (o.ml && ks.some(function (x) { return /^洗/.test(x); })) document.querySelector('[data-light=ml23]').checked = true;
+        if (o.org8 && ks.some(function (x) { return /^組/.test(x); })) document.querySelector('[data-light=org8]').checked = true;
+      }
+      if (o.probation) setv('sProb', 'grant'); else if (o.probDeny) setv('sProb', 'deny');
+      if (o.probCond) setv('sProbC', o.probCond);
+      if (rg.length > 1 && o.rel === 'many' && !sv('sAgg')) setv('sAgg', 'set');
+      setv('sYk', !!(main && main.yk));
+      $('#sRange').hidden = !rg.length;
+      $('#sRange').innerHTML = rg.map(function (x) { return '<div><b>' + esc(x.name) + '</b>　處斷刑：' + esc(x.R.text) + '<span class="basis">' + (x.why.length ? '依：' + esc(x.why.join('、')) : '無加減事由') + '；宣告6月以下時' + (x.yk ? '得易科罰金' : '不得易科罰金') + '</span></div>'; }).join('');
+      $('#sImpInfo').textContent = '已帶入：' + (o.name || '被告') + '｜' + (main ? main.name : (r.crimes[0] ? r.crimes[0].e.n : '未辨識罪名'));
+      toast('已自撰稿綱要帶入');
+    };
+    function cov(o, text) {
+      var C = CATS[o.cat] || CATS.generic, neg = !!C.neg;
+      var has = function (re) { return re.test(text); };
+      var row = function (n, t, st, d) { return '<tr><td>' + n + '</td><td>' + t + '</td><td><span class="st ' + st + '">' + { y: '已具體審酌', p: '含待填欄位', n: '未審酌' }[st] + '</span>' + (d ? '<div class="basis">' + d + '</div>' : '') + '</td></tr>'; };
+      var ph = function (s) { return /〔/.test(s) ? 'p' : 'y'; };
+      var mot = neg ? null : (o.motiveT || (o.motive !== 'none' && (o.motive !== 'auto' || C.motive)));
+      var R = [
+        row('第1款', '犯罪之動機、目的', neg ? 'n' : mot ? (o.motiveT ? 'y' : 'p') : 'n', neg ? '過失犯不審酌' : ''),
+        row('第2款', '犯罪時所受之刺激', o.stim && o.stim !== 'none' ? (o.stim === 'other' ? 'p' : 'y') : 'n', '無特殊刺激者得不載'),
+        row('第3款', '犯罪之手段', ph(o.meansT || C.means), ''),
+        row('第4款', '犯罪行為人之生活狀況', o.job && o.fam && o.econ ? 'y' : 'p', ''),
+        row('第5款', '犯罪行為人之品行', o.record ? 'y' : 'n', o.record === 'recUsed' ? '已剔除構成累犯之前科' : ''),
+        row('第6款', '犯罪行為人之智識程度', o.edu ? 'y' : 'p', ''),
+        row('第7款', '犯罪行為人與被害人之關係', o.rel ? 'y' : 'n', '無特殊關係者得不載'),
+        row('第8款', '犯罪行為人違反義務之程度', neg ? 'y' : 'n', neg ? '' : '故意犯通常不適用'),
+        row('第9款', '犯罪所生之危險或損害', ph(o.harmT || C.harm), ''),
+        row('第10款', '犯罪後之態度', o.plea ? (o.comp ? (/〔/.test(text.split('犯後')[1] || '') ? 'p' : 'y') : 'y') : 'n', '')
+      ];
+      return '<table class="cov"><thead><tr><th>刑法第57條</th><th>事項</th><th>狀態</th></tr></thead><tbody>' + R.join('') + '</tbody></table><div class="note">量刑應就第57條各款具體評價，勿僅複誦條文；與本案無涉之款次（如無特殊刺激、與被害人無特殊關係）得不記載。科刑資料應於審判期日調查並經科刑辯論（刑事訴訟法第288條第4項、第289條第2項）。</div>';
+    }
+    function sGen() {
+      var o = sOpts(); sLast = JudgmentCheck.buildSentencing(o); sLast.o = o;
+      $('#sOut').value = sLast.text;
+      $('#sCnt').textContent = (sLast.text.match(/〔/g) || []).length + ' 個待填欄位';
+      $('#sCopy').disabled = false; $('#sToDr').disabled = false;
+      sSide();
+    }
+    function sSide() {
+      document.querySelectorAll('#sTabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.st === stab); });
+      $('#sOut').hidden = stab !== 'text'; $('#sSide').hidden = stab === 'text';
+      if (stab === 'text') return;
+      if (!sLast) { $('#sSide').innerHTML = '<div class="empty">先產生量刑理由</div>'; return; }
+      if (stab === 'notes') {
+        var order = { error: 0, warn: 1, info: 2 };
+        $('#sSide').innerHTML = sLast.notes.slice().sort(function (a, b) { return order[a.lv] - order[b.lv]; }).map(function (n) {
+          return '<div class="f ' + n.lv + '"><div class="bd"><div class="tt"><span class="bdg ' + n.lv + '">' + LV[n.lv] + '</span>' + esc(n.t) + '</div><div class="dt">' + esc(n.d) + '</div>' + (n.ref ? '<div class="rf"><b>出處</b>　' + esc(n.ref) + '</div>' : '') + '</div></div>';
+        }).join('');
+      } else $('#sSide').innerHTML = cov(sLast.o, $('#sOut').value);
+    }
+    document.querySelectorAll('#sTabs button').forEach(function (b) { b.onclick = function () { stab = b.dataset.st; sSide(); }; });
+    $('#sGenBtn').onclick = sGen;
+    $('#stForm').addEventListener('keydown', function (e) { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); sGen(); } });
+    $('#sCopy').onclick = function () { var t = $('#sOut').value; navigator.clipboard && navigator.clipboard.writeText(t).then(function () { toast('已複製'); }, function () { $('#sOut').select(); document.execCommand('copy'); toast('已複製'); }); };
+    $('#sToDr').onclick = function () {
+      var d = $('#dOut').value;
+      if (!d.trim()) { toast('撰稿綱要尚未產生，請先至撰稿綱要產生判決綱要'); return; }
+      var lines = d.split('\n'), i = lines.findIndex(function (l) { return /爰以行為人之責任為基礎/.test(l); });
+      if (i < 0) { toast('撰稿綱要中找不到「爰以行為人之責任為基礎」段落'); return; }
+      var pre = (lines[i].match(/^[\s　]*(（[一二三四五六七八九十]+）|[一二三四五六七八九十]+、|[㈠-㈩])?/) || [''])[0];
+      var main = (sLast && sLast.parts.main) || $('#sOut').value;
+      lines.splice(i, 1, pre + main.split('\n').join('\n' + '　'.repeat(Math.min(pre.length, 3))));
+      $('#dOut').value = lines.join('\n');
+      setAppMode('dr'); toast('已取代撰稿綱要之量刑段落');
+    };
+    $('#sReset').onclick = function () {
+      $('#stForm').reset(); document.querySelectorAll('#stForm textarea[data-def]').forEach(function (ta) { ta.value = ''; ta.dataset.auto = '1'; });
+      fillDefaults(true); $('#sRange').hidden = true; $('#sImpInfo').textContent = '尚未帶入';
+    };
+    $('#sEx').onclick = function () {
+      $('#sReset').click();
+      setv('sCat', 'fraud'); fillDefaults(true);
+      setv('sRole', '其擔任面交車手，依上手指示前往指定地點向告訴人收取現金後轉交收水，非居於主導或核心地位');
+      setv('sHarm', '致告訴人受有新臺幣80萬元之財產損害，並製造金流斷點，增加檢警查緝及被害人求償之困難'); ['sRole', 'sHarm'].forEach(function (id) { var t = $('#' + id); t.classList.remove('dflt'); t.dataset.auto = '0'; });
+      setv('sGain', '8,000'); setv('sRec', 'none'); setv('sEdu', '高中畢業'); setv('sJob', '餐飲業'); setv('sEcon', 'tight'); setv('sFam', '未婚、無子女，與母親同住');
+      setv('sPlea', 'full'); setv('sComp', 'inst'); setv('sAmt', '30萬'); setv('sVictim', 'lenient'); setv('sPros', '請求依法量處適當之刑'); setv('sDfn', '請求從輕量刑'); setv('sHasDef', true);
+      document.querySelector('[data-light=ml23]').checked = true; document.querySelector('[data-light=org8]').checked = true; setv('sFineNo', true); setv('sConf', true);
+      sGen();
+    };
+    fillDefaults(true);
+  })();
   preview(); setAppMode('chk');
 })();
 </script>
