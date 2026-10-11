@@ -140,6 +140,7 @@ small.m{color:var(--mute)}
       <li>於「生成」分頁填寫案頭，再逐筆新增犯行。每筆犯行可選判決結果（有罪／無罪／不另為無罪）、加重條件（§321Ⅰ①～⑥）、既未遂、被告態度與辯解。</li>
       <li>辯解模組可逐項選「不採」或「採」：有罪犯行通常選不採；無罪或「不知同夥帶工具」「只載送未在場」等降格情形選採。</li>
       <li>「選用模組」為論罪補充段落（毀損競合、侵入建築物、接續犯、結夥甲／乙說等），勾選後插入論罪欄。</li>
+      <li>理由欄順序依司法官學院《刑事裁判書類寫作要領》及刑事書類導讀講義：證據能力→認定事實→<b>論罪</b>（構成要件或加重條件之涵攝說明→核被告所為→變更起訴法條→實質上一罪→裁判上一罪→共同正犯→數罪併罰→移送併辦→刑之加重減輕，先加後減）→<b>科刑</b>（刑法第57條、易刑標準→定應執行刑→緩刑）→沒收→不另為無罪。選用模組會依其性質自動排入對應位置。</li>
       <li>沒收區塊之每一筆會自動帶入主文與理由；扣案物自動編入附表二並與主文編號連動。</li>
       <li>右側全文可直接修改；修改後自動更新暫停，按「重新產生」才會覆蓋。〔　〕為待填處，狀態列顯示數量。</li>
       <li>「匯出 JSON」可自行存檔，下次以「匯入 JSON」還原。本頁不寫入瀏覽器儲存，關閉或重新整理即清除。</li>
@@ -266,8 +267,8 @@ const MAP=Object.fromEntries(MODS.map(m=>[m.id,m]));
 const DMAP=Object.fromEntries(DENY.map(d=>[d.id,d]));
 
 /* ===== 2. 狀態 ===== */
-function newCrime(){return {res:"g",kind:"move",stage:"done",k1:false,k1t:"住宅",k2:false,k2a:"毀越",k2b:"門窗",k2o:"",k3:false,tool:"",k4:false,fAB:"A",k5:false,k5d:"火災",k6:false,p6:"",partners:"",date:"",place:"",victim:"",item:"",value:"",means:"",fail:"",spot:"",disc:"",iref:"",evp:"",pvt:"parole",conf:"c",admit:"",evid:"",den:{},mods:[],recid:"0",prior:"",pdate:"",s19:false,hosp:"",diag:"",s19n:false,s62:false,pol:"",s59:false,s59n:false,pt:"有期徒刑",py:"",pm:"",pd:"",fine:"",chg:false,ilaw:"",idone:false,acq:"",link:"0",rel:"想像競合犯之裁判上一罪"};}
-function newState(){return {head:{court:"",yr:"",word:"易",no:"",office:"",indict:"",name:"",sex:"男",birth:"",idno:"",addr:"",def:"",p1:"",p2:"",div:"",judge:"",clerk:"",jy:"",jm:"",jd:""},ev:true,crimes:[newCrime()],sent:{motive:"不思以正當途徑獲取所需",edu:"",job:"",fam:"",comp:"迄未與被害人達成和解或賠償",gap:"",recMain:false,prob:false,proby:"2",execA:"",execB:""},conf:[]};}
+function newCrime(){return {res:"g",kind:"move",stage:"done",k1:false,k1t:"住宅",k2:false,k2a:"毀越",k2b:"門窗",k2o:"",k3:false,tool:"",k4:false,fAB:"A",k5:false,k5d:"火災",k6:false,p6:"",partners:"",date:"",place:"",victim:"",item:"",value:"",means:"",fail:"",spot:"",disc:"",iref:"",evp:"",pvt:"parole",bz:false,bzno:"",bzrel:"接續犯之實質上一罪",conf:"c",admit:"",evid:"",den:{},mods:[],recid:"0",prior:"",pdate:"",s19:false,hosp:"",diag:"",s19n:false,s62:false,pol:"",s59:false,s59n:false,pt:"有期徒刑",py:"",pm:"",pd:"",fine:"",chg:false,ilaw:"",idone:false,acq:"",link:"0",rel:"想像競合犯之裁判上一罪"};}
+function newState(){return {head:{court:"",yr:"",word:"易",no:"",office:"",indict:"",name:"",sex:"男",birth:"",idno:"",addr:"",def:"",p1:"",p2:"",div:"",judge:"",clerk:"",jy:"",jm:"",jd:""},ev:true,crimes:[newCrime()],sent:{motive:"不思以正當途徑獲取所需",edu:"",job:"",fam:"",comp:"迄未與被害人達成和解或賠償",gap:"",fullLaw:false,recMain:false,prob:false,proby:"2",execA:"",execB:""},conf:[]};}
 let S=newState();
 function save(){} /* 不保存資料：刻意為空 */
 try{["theftGen","theftGenState","theft-generator","theftGen_v1"].forEach(k=>localStorage.removeItem(k));}catch(e){}
@@ -302,6 +303,34 @@ function penStr(c){
 function canEk(c){if(c.pt==="拘役")return true;if(c.pt==="有期徒刑"){const m=penMonths(c);return m>0&&m<=6;}return false;}
 function convStr(c){if(c.pt==="罰金")return "，如易服勞役，以新臺幣壹仟元折算壹日";return canEk(c)?"，如易科罰金，以新臺幣壹仟元折算壹日":"";}
 function fill(t,c){return t.replace(/\{物\}/g,v(c.item,"財物")).replace(/\{處所\}/g,v(c.spot||c.place,"現場處所")).replace(/\{TOOL\}/g,v(c.tool,"工具")).replace(/\{P6\}/g,v(c.p6,"公眾運輸處所")).replace(/\{PRIOR\}/g,v(c.prior,"前案罪名")+"案件").replace(/\{PDATE\}/g,v(c.pdate,"執行完畢日期")).replace(/\{HOSP\}/g,v(c.hosp,"鑑定機關")).replace(/\{DIAG\}/g,v(c.diag,"病名")).replace(/\{POL\}/g,v(c.pol,"到場員警")).replace(/\{PVW\}/g,c.pvt==="merge"?"嗣與他案經法院裁定合併執行，前案所處徒刑於本件犯罪時尚在接續執行中":"前經假釋出監，於假釋期間內再犯本件，嗣假釋經撤銷，殘刑尚待執行").replace(/\{KS\}/g,kList(c).map((n,i)=>(i?"、":"")+"第"+n+"款").join(""));}
+const STEP_SUB=["J1","H","K3","K1"],STEP_IMAG=["J2","J3","K3B"],STEP_SEP=["K4"];
+function coreLaw(c){let t=lawOf(c)+"之"+crimeName(c);
+ if(c.kind==="land")t+="，應科以同條第1項之刑";
+ const ex=[];if(c.mods.includes("J2"))ex.push("同法第354條之毀損他人物品罪");if(c.mods.includes("J3"))ex.push("同法第306條第1項之無故侵入他人建築物罪");
+ return t+(ex.length?"及"+ex.join("、"):"");}
+/* 據上論斷之實體法條（寫作要領：程序法→刑法第28條→刑分罪名→第55條→先加重後減輕→易刑→第51條→緩刑→沒收→刑法施行法） */
+function subLaws(G){const L=[];const add=x=>{if(!L.includes(x))L.push(x);};
+ if(G.some(o=>o.c.partners.trim()))add("第28條");
+ G.forEach(o=>{const c=o.c,att=c.stage!=="done";
+  if(c.kind==="land")add(att?"第320條第3項、第2項、第1項":"第320條第2項、第1項");
+  else if(!kList(c).length)add(att?"第320條第3項、第1項":"第320條第1項");
+  else add("第321條"+(att?"第2項、":"")+"第1項"+kList(c).map((n,i)=>(i?"、":"")+"第"+n+"款").join(""));
+  if(c.mods.includes("J2"))add("第354條");if(c.mods.includes("J3"))add("第306條第1項");});
+ if(G.some(o=>["J2","J3","K3B"].some(m=>o.c.mods.includes(m))))add("第55條");
+ if(G.some(o=>o.c.recid==="add"))add("第47條第1項");
+ if(G.some(o=>o.c.s19))add("第19條第2項");
+ if(G.some(o=>o.c.stage==="att"))add("第25條第2項");
+ if(G.some(o=>o.c.stage==="stop"))add("第27條第1項前段");
+ if(G.some(o=>o.c.s62))add("第62條前段");
+ if(G.some(o=>o.c.s59))add("第59條");
+ if(G.some(o=>{const c=o.c;const r=[c.stage!=="done",c.s19,c.s62,c.s59].filter(Boolean).length;return r>1;}))add("第70條");
+ if(G.some(o=>{const c=o.c;return c.recid==="add"&&(c.stage!=="done"||c.s19||c.s62||c.s59);}))add("第71條第1項");
+ if(G.some(o=>canEk(o.c)))add("第41條第1項前段");
+ if(G.some(o=>o.c.pt==="罰金"))add("第42條第3項前段");
+ if(G.length>1){const P=execPlan();const ts=[...(P.A?P.ek:[]),...(P.B?P.nek:[])].map(o=>o.c.pt);if(ts.includes("有期徒刑"))add("第51條第5款");if(ts.includes("拘役"))add("第51條第6款");}
+ if(S.sent.prob)add("第74條第1項第1款");
+ S.conf.filter(x=>CAT[x.cat]&&CAT[x.cat].v&&G.some(o=>o.i===Number(x.crime))).forEach(x=>{if(x.cat==="toolS")add("第38條第2項前段");else if(x.cat==="lootS")add("第38條之1第1項前段");else{add("第38條之1第1項前段");add("第38條之1第3項");}});
+ return "，刑法"+L.join("、")+"，刑法施行法第1條之1第1項";}
 function guilty(){return S.crimes.map((c,i)=>({c,i})).filter(o=>o.c.res==="g");}
 function factRef(gi,ng){return ng>1?"事實欄"+pn(gi):"事實欄";}
 function execPlan(){const G=guilty();const ek=G.filter(o=>canEk(o.c)),nek=G.filter(o=>!canEk(o.c)&&o.c.pt!=="罰金");return {ek,nek,A:ek.length>1,B:nek.length>1,split:ek.length>0&&nek.length>0};}
@@ -391,24 +420,41 @@ function build(){
   if(G.length===1)reasonFactLines(G[0].c,1).forEach(x=>out.push(x));
   else G.forEach((o,j)=>{out.push(pn(j)+factRef(j,G.length)+"部分：");reasonFactLines(o.c,2).forEach(x=>out.push(x));});
   if(G.length>1)out.push(pn(G.length)+"綜上所述，本案事證明確，被告上開犯行均堪認定，均應依法論科。");
-  /* 論罪 */
+  /* 論罪（依刑事裁判書類寫作要領：涵攝說明→核被告所為→變更起訴法條→實質上一罪→裁判上一罪→共犯→數罪併罰→犯罪事實擴張→刑之加重減輕） */
   out.push(num(0,top++)+"論罪：");let k=0;
-  const ids=[];G.forEach(o=>{autoModIds(o.c).concat(o.c.mods).forEach(id=>{if(!ids.includes(id)&&MAP[id])ids.push(id);});});
+  const modsOf=o=>autoModIds(o.c).concat(o.c.mods);
+  const ids=[];G.forEach(o=>{modsOf(o).forEach(id=>{if(!ids.includes(id)&&MAP[id])ids.push(id);});});
   if(G.some(o=>Object.values(o.c.den).length)&&!ids.includes("DEF_INTENT")&&G.some(o=>Object.keys(o.c.den).some(d=>o.c.den[d]&&DMAP[d]&&DMAP[d].ref.r==="DEF_INTENT")))ids.unshift("DEF_INTENT");
   ids.sort((a,b)=>MODS.findIndex(m=>m.id===a)-MODS.findIndex(m=>m.id===b));
-  ids.forEach(id=>{const c0=(G.find(o=>autoModIds(o.c).concat(o.c.mods).includes(id))||G[0]).c;out.push(pn(k++)+fill(MAP[id].x,c0));});
-  if(G.length===1){const c=G[0].c;out.push(pn(k++)+"核被告所為，係犯"+lawOf(c)+"之"+crimeName(c)+"。");}
-  else out.push(pn(k++)+"核被告"+G.map((o,j)=>"就"+factRef(j,G.length)+"所為，係犯"+lawOf(o.c)+"之"+crimeName(o.c)).join("；")+"。");
-  G.forEach((o,j)=>{const c=o.c;const pre=G.length>1?"被告就"+factRef(j,G.length)+"部分，":"被告";
-   if(c.partners.trim())out.push(pn(k++)+pre+"與"+c.partners.trim()+"間，有犯意聯絡及行為分擔，應依刑法第28條規定論以共同正犯。");
+  const pushMod=id=>{const hs=G.map((o,j)=>({o,j})).filter(x=>modsOf(x.o).includes(id));const c0=(hs[0]||{o:G[0]}).o.c;
+   const pre=G.length>1&&hs.length&&STEP_SUB.concat(STEP_IMAG,STEP_SEP).includes(id)?"就"+hs.map(x=>factRef(x.j,G.length)).join("、")+"部分，":"";out.push(pn(k++)+pre+fill(MAP[id].x,c0));};
+  /* ⑴ 事實涵攝上之必要說明（構成要件、加重條件之解釋） */
+  ids.filter(id=>!STEP_SUB.includes(id)&&!STEP_IMAG.includes(id)&&!STEP_SEP.includes(id)).forEach(pushMod);
+  /* ⑵ 核被告所為 */
+  if(G.length===1){const c=G[0].c;out.push(pn(k++)+"核被告所為，係犯"+coreLaw(c)+"。");}
+  else out.push(pn(k++)+"核被告"+G.map((o,j)=>"就"+factRef(j,G.length)+"所為，係犯"+coreLaw(o.c)).join("；")+"。");
+  /* ⑶ 變更起訴法條／既未遂之更正 */
+  G.forEach((o,j)=>{const c=o.c;
    if(c.chg)out.push(pn(k++)+"公訴意旨認"+(G.length>1?"被告就"+factRef(j,G.length)+"所為":"被告所為")+"係犯"+v(c.ilaw,"起訴法條及罪名")+"，容有未洽，惟起訴之基本社會事實同一，並經本院當庭告知上開罪名，無礙被告防禦權之行使，爰依刑事訴訟法第300條規定變更起訴法條。");
    if(c.idone&&c.stage!=="done")out.push(pn(k++)+"公訴意旨認"+(G.length>1?"被告就"+factRef(j,G.length)+"所為":"被告所為")+"構成既遂，容有未洽，惟既遂、未遂僅屬犯罪態樣之別，不涉罪名之變更，起訴法條無庸變更，並經本院於審理時告知被告，無礙其防禦權之行使。");});
+  /* ⑷ 罪數：先實質上一罪，再裁判上一罪 */
+  STEP_SUB.filter(id=>ids.includes(id)).forEach(pushMod);
+  STEP_IMAG.filter(id=>ids.includes(id)).forEach(pushMod);
+  /* ⑸ 共犯 */
+  G.forEach((o,j)=>{const c=o.c;const pre=G.length>1?"被告就"+factRef(j,G.length)+"部分，":"被告";
+   if(c.partners.trim())out.push(pn(k++)+pre+"與"+c.partners.trim()+"間，有犯意聯絡及行為分擔，應依刑法第28條規定論以共同正犯。");});
+  /* ⑹ 數罪併罰 */
+  STEP_SEP.filter(id=>ids.includes(id)).forEach(pushMod);
   if(G.length>1)out.push(pn(k++)+"被告所犯上開"+cnLow(G.length)+"罪，犯意各別，行為互殊，應予分論併罰。");
-  out.push(num(0,top++)+"科刑：");k=0;
-  /* 加減 */
+  /* ⑺ 犯罪事實擴張（移送併辦） */
+  G.forEach((o,j)=>{const c=o.c;if(!c.bz)return;
+   out.push(pn(k++)+"檢察官以"+v(c.bzno,"併辦意旨書案號")+"移送併辦之犯罪事實，與"+(G.length>1?factRef(j,G.length)+"經起訴並經本院論罪之犯行":"起訴並經本院論罪之犯行")+"，"+(c.bzrel==="同一事實"?"為同一事實":"有"+c.bzrel+"關係")+"，為起訴效力所及，本院已於審理時告知被告併辦之犯罪事實及所涉罪名，予其辯明機會，自應併予審理，一併判決。");});
+  /* ⑻ 刑之加重、減輕（先加後減） */
   const fl=G.map((o,j)=>({j,L:factorLines(o.c)})).filter(x=>x.L.length);
   if(fl.length){out.push(pn(k++)+"刑之加重、減輕事由：");let q=0;
    fl.forEach(x=>{if(G.length>1){out.push(num(2,q++)+factRef(x.j,G.length)+"部分：");x.L.forEach((t,y)=>out.push(num(3,y)+t));}else x.L.forEach(t=>out.push(num(2,q++)+t));});}
+  /* 科刑（量刑→易刑→定應執行刑→緩刑） */
+  out.push(num(0,top++)+"科刑：");k=0;
   /* 57 */
   const allC=G.every(o=>o.c.conf==="c"),noneC=G.every(o=>o.c.conf!=="c");
   const att=allC?"犯後坦承犯行":noneC?"犯後否認犯行":"犯後就部分犯行坦承、部分否認";
@@ -443,7 +489,7 @@ function build(){
  }
  /* 據上論斷 */
  const laws=[];if(G.length)laws.push("第299條第1項前段");if(G.some(o=>o.c.chg))laws.push("第300條");if(A.length)laws.push("第301條第1項");
- out.push("據上論斷，應依刑事訴訟法"+(laws.length?laws.join("、"):"〔條文〕")+"，判決如主文。");
+ out.push("據上論斷，應依刑事訴訟法"+(laws.length?laws.join("、"):"〔條文〕")+(S.sent.fullLaw&&G.length?subLaws(G):"")+"，判決如主文。");
  out.push("本案經檢察官"+v(H.p1,"起訴檢察官")+"提起公訴，檢察官"+v(H.p2,"蒞庭檢察官")+"到庭執行職務。");
  out.push("中　　華　　民　　國　　"+v(H.jy,"年")+"　　年　　"+v(H.jm,"月")+"　　月　　"+v(H.jd,"日")+"　　日");
  out.push("　　　　　　　　　刑事第"+v(H.div,"庭別")+"庭　法　官　"+v(H.judge,"法官"));
@@ -503,7 +549,7 @@ function crimeCard(c,i){
  <div class="grid">${c.k1?cs(i,"k1t","①客體",["住宅","有人居住之建築物"]):""}${c.k2?cs(i,"k2a","②態樣",[["毀壞","毀壞（僅破壞）"],["毀越","毀越（破壞後越入）"],["踰越","踰越（攀越）"]])+cs(i,"k2b","②客體",["門窗","牆垣","安全設備"])+ci(i,"k2o","②具體物（事實用）","鐵窗窗條、圍籬"):""}${c.k3?ci(i,"tool","③兇器名稱","螺絲起子"):""}${c.k4?cs(i,"fAB","④結夥認定",[["A","在場／附近接應計入"],["B","有同謀者未在場→不計入"]]):""}${c.k5?ci(i,"k5d","⑤災害","火災"):""}${c.k6?ci(i,"p6","⑥處所（罪名用）","供陸路公眾運輸之火車"):""}</div>`:""}
  <h3>事實</h3><div class="grid">${ci(i,"date","時間","114年3月5日凌晨2時許")}${ci(i,"place","地點",c.kind==="land"?"〇〇段〇地號":"新北市〇〇區〇〇路〇號")}${c.kind==="land"?ci(i,"area","竊佔面積（平方公尺）","25"):""}${ci(i,"victim","被害人",c.kind==="land"?"管理機關":"被害人姓名")}${c.kind==="move"&&c.stage==="done"?ci(i,"item","竊得財物","現金新臺幣3,000元")+ci(i,"value","價值（元）","3000"):""}${c.stage==="att"?ci(i,"fail","未得逞原因","未覓得財物"):""}${ci(i,"spot","現場（辯解用）","B女車內")}${ci(i,"partners","共犯（空白＝單獨）","乙、丙")}${ci(i,"means","手段描述（空白＝自動）","",2)}${ci(i,"disc","查獲經過（選填；簡化原則不宜記載）","",2)}</div>
  <h3>證據與辯解</h3><div class="grid">${ci(i,"evid","證據清單","監視器錄影畫面截圖、現場照片",2)}${c.conf==="d"||c.res!=="g"?ci(i,"admit","被告不爭執之客觀事實","於上開時地取走該物",2)+ci(i,"evp","爭點證據卷頁（選填）","偵卷第15頁、本院卷第33頁",2):""}${c.res==="a"?ci(i,"iref","起訴書犯罪事實編號（無罪主文用）","一㈢"):""}${c.res!=="g"?ci(i,"acq","公訴意旨（空白＝依事實欄自動）","",2):""}${ci(i,"ilaw","起訴法條／罪名（變更或無罪用）","刑法第320條第1項之竊盜罪",2)}</div>
- <div class="chk">${cc(i,"chg","變更起訴法條（刑訴§300）")}${cc(i,"idone","起訴認既遂（改論未遂）")}</div>
+ <div class="chk">${cc(i,"chg","變更起訴法條（刑訴§300）")}${cc(i,"idone","起訴認既遂（改論未遂）")}${c.res==="g"?cc(i,"bz","移送併辦（起訴效力所及）"):""}</div>${c.res==="g"&&c.bz?`<div class="grid">${ci(i,"bzno","併辦意旨書案號","115年度偵字第789號併辦意旨書")}${cs(i,"bzrel","與起訴事實之關係",["接續犯之實質上一罪","想像競合犯之裁判上一罪","同一事實"])}</div>`:""}
  ${c.conf==="d"||c.res!=="g"?`<h3>辯解模組（不採＝有罪理由；採＝有利被告）</h3><div class="den">${DENY.map(d=>`<span>${esc(d.t)}</span><select data-den="${d.id}" data-c="${i}"><option value="">—</option><option value="r"${c.den[d.id]==="r"?" selected":""}>不採</option><option value="a"${c.den[d.id]==="a"?" selected":""}>採</option></select>`).join("")}</div>`:""}
  ${c.res==="g"?`<h3>選用論罪模組</h3><div class="chk">${optMods.map(m=>`<label><input type="checkbox" data-arr="mods" data-c="${i}" value="${m.id}"${c.mods.includes(m.id)?" checked":""}>${esc(m.t)}</label>`).join("")}</div>
  <h3>刑之加減</h3><div class="grid">${cs(i,"recid","累犯",[["0","不構成"],["add","構成，加重"],["no","構成，不加重"],["nc","檢察官未主張"],["pv","前案未執行完畢→非累犯"]])}${c.recid==="add"||c.recid==="no"||c.recid==="pv"?ci(i,"prior","前案罪名","竊盜")+(c.recid==="pv"?cs(i,"pvt","未執行完畢原因",[["parole","假釋期間再犯、假釋撤銷"],["merge","與他案合併執行，接續執行中"]]):ci(i,"pdate","執行完畢日","112年3月1日")):""}</div>
@@ -519,7 +565,7 @@ function renderForm(){
  <h2>犯行</h2>${S.crimes.map(crimeCard).join("")}
  <div class="bar"><button class="btn" id="bAdd">＋新增犯行</button></div>
  <h2>量刑與執行</h2><div class="grid">${inp("sent.motive","犯罪動機","")}${inp("sent.comp","賠償情形","",2)}${inp("sent.edu","教育程度","高職畢業")}${inp("sent.job","職業","從事〇〇")}${inp("sent.fam","家庭經濟狀況","未婚、經濟勉持")}${G.length>1?inp("sent.gap","犯罪時間密接程度（定刑用）","集中於115年3月間，時間密接")+inp("sent.execA","應執行刑（得易科）","有期徒刑壹年")+inp("sent.execB","應執行刑（不得易科）",""):""}</div>
- <div class="chk"><label><input type="checkbox" data-k="sent.recMain"${S.sent.recMain?" checked":""}>主文記載「累犯」<small class="m">（110台上大5660：無庸諭知）</small></label><label><input type="checkbox" data-k="sent.prob"${S.sent.prob?" checked":""}>宣告緩刑</label>${S.sent.prob?`<label>年數 <select data-k="sent.proby">${["2","3","4","5"].map(x=>`<option${S.sent.proby===x?" selected":""}>${x}</option>`).join("")}</select></label>`:""}</div>
+ <div class="chk"><label><input type="checkbox" data-k="sent.recMain"${S.sent.recMain?" checked":""}>主文記載「累犯」<small class="m">（110台上大5660：無庸諭知）</small></label><label><input type="checkbox" data-k="sent.fullLaw"${S.sent.fullLaw?" checked":""}>據上論斷併引實體法條<small class="m">（簡化原則得僅引程序法）</small></label><label><input type="checkbox" data-k="sent.prob"${S.sent.prob?" checked":""}>宣告緩刑</label>${S.sent.prob?`<label>年數 <select data-k="sent.proby">${["2","3","4","5"].map(x=>`<option${S.sent.proby===x?" selected":""}>${x}</option>`).join("")}</select></label>`:""}</div>
  <h2>沒收</h2>${S.conf.map((x,j)=>`<div class="card"><div class="grid"><label class="f">類別<select data-cf="${j}" data-f="cat">${CAT_ORDER.map(k=>`<option value="${k}"${x.cat===k?" selected":""}>${CAT[k].l}</option>`).join("")}</select></label><label class="f">物品（含數量）<input type="text" data-cf="${j}" data-f="desc" value="${esc(x.desc)}" placeholder="現金新臺幣3,000元"></label>${CAT[x.cat]&&CAT[x.cat].seized?`<label class="f">附表數量<input type="text" data-cf="${j}" data-f="qty" value="${esc(x.qty)}" placeholder="1支"></label>`:""}<label class="f">所屬犯行<select data-cf="${j}" data-f="crime">${S.crimes.map((c,i)=>`<option value="${i}"${String(x.crime)===String(i)?" selected":""}>犯行${i+1}</option>`).join("")}</select></label><label class="f">&nbsp;<button class="btn sm" data-cdel="${j}">刪除</button></label></div></div>`).join("")}
  <div class="bar"><button class="btn" id="bCAdd">＋新增沒收項目</button></div>
  <h2>檔案</h2><div class="bar"><button class="btn" id="bSample">載入範例</button><button class="btn" id="bExp">匯出 JSON</button><button class="btn" id="bImp">匯入 JSON</button><button class="btn" id="bClear">清空</button></div>
@@ -597,6 +643,5 @@ function sample(){const s=newState();Object.assign(s.head,{court:"新北",yr:"11
 
 renderForm();regen();
 </script>
-  <a href="index.html">返回首頁</a>
 </body>
 </html>
