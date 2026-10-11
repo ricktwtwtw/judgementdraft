@@ -358,7 +358,7 @@ function denyItems(c,mode){/* mode: 'any' returns [{id,ver}] */
  return Object.keys(c.den).filter(id=>c.den[id]&&DMAP[id]).map(id=>({d:DMAP[id],ver:c.den[id]}));}
 function reasonFactLines(c,lv){/* 回傳段落陣列（含編號） */
  const L=[];const nm=crimeName(c);
- if(c.conf==="c"){L.push("上揭犯罪事實，業據被告於偵查及本院審理時坦承不諱，核與證人即被害人"+v(c.victim,"被害人")+"於警詢時之證述相符，並有"+v(c.evid,"證據清單")+"在卷可稽，足認被告之任意性自白與事實相符，堪以採信。");return L;}
+ if(c.conf==="c"){L.push("上揭犯罪事實，業據被告於偵查及本院審理時坦承不諱，核與證人即被害人"+v(c.victim,"被害人")+"於警詢時之證述相符，並有"+v(c.evid,"證據清單")+"在卷可稽，足認被告之任意性自白與事實相符，堪以採信。本案事證明確，被告上開犯行堪以認定，應依法論科。");return L;}
  const ds=denyItems(c);const says=ds.length?ds.map(o=>o.d.say).join("；"):"〔被告辯解〕";
  L.push("訊據被告固坦承"+v(c.admit,"不爭執之客觀事實")+"，惟否認有何"+nm.replace(/罪$/,"")+"犯行，辯稱："+says+"等語。經查：");
  L.push(num(lv,0)+v(c.admit,"不爭執之客觀事實")+"之事實，業據被告供承在卷，核與證人即被害人"+v(c.victim,"被害人")+"於警詢時之證述相符，並有"+v(c.evid,"證據清單")+(c.evp&&c.evp.trim()?"（見"+c.evp.trim()+"）":"")+"在卷可稽，此部分事實首堪認定。");
